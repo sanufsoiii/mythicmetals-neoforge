@@ -2,8 +2,8 @@ package com.mythicmetals.misc;
 
 import com.mojang.authlib.GameProfile;
 import com.mythicmetals.item.tools.HammerBase;
-import eu.pb4.common.protection.api.CommonProtection;
-import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.level.BlockEvent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -21,11 +21,11 @@ import org.jetbrains.annotations.Nullable;
 public class BlockBreaker {
 
     public static boolean isProtected(Level world, BlockPos blockPos, GameProfile profile, @Nullable Player player) {
-        return !CommonProtection.canBreakBlock(world, blockPos, profile, player);
+        return !Protection.canBreakBlock(world, blockPos, profile, player);
     }
 
     public static boolean isProtected(Level world, BlockPos blockPos, Explosion explosion, GameProfile profile, @Nullable Player player) {
-        return !CommonProtection.canExplodeBlock(world, blockPos, explosion, profile, player);
+        return !Protection.canExplodeBlock(world, blockPos, explosion, profile, player);
     }
 
     public static Iterable<BlockPos> findBlocks(UseOnContext context, int depth) {
@@ -78,7 +78,18 @@ public class BlockBreaker {
 
     public static void initHammerTime() {
         // Original Block Pos is always the center block of where the hammer hits
-        PlayerBlockBreakEvents.BEFORE.register((world, player, originalBlockPos, state, blockEntity) -> {
+        // Fabric PlayerBlockBreakEvents.BEFORE -> NeoForge BlockEvent.BreakEvent; returning false = cancel
+        NeoForge.EVENT_BUS.<BlockEvent.BreakEvent>addListener(event -> {
+            if (Protection.isProbing()) return; // protection probe, not a real break
+            if (!(event.getLevel() instanceof Level world)) return;
+            if (!mythicmetals$hammerTime(world, event.getPlayer(), event.getPos(), event.getState())) {
+                event.setCanceled(true);
+            }
+        });
+    }
+
+    private static boolean mythicmetals$hammerTime(Level world, Player player, BlockPos originalBlockPos, net.minecraft.world.level.block.state.BlockState state) {
+        {
             var stack = player.getMainHandItem();
 
             if (!(stack.getItem() instanceof HammerBase hammer)) {
@@ -119,7 +130,7 @@ public class BlockBreaker {
             if (hasMined) stack.hurtAndBreak(2, player, EquipmentSlot.MAINHAND);
 
             return true;
-        });
+        }
     }
 
     public static float calculateHardestDelta(BlockHitResult blockHitResult, Player player, HammerBase hammer) {

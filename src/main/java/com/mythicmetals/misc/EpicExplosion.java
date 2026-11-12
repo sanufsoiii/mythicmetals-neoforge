@@ -2,7 +2,6 @@ package com.mythicmetals.misc;
 
 import com.mojang.authlib.GameProfile;
 import com.mythicmetals.data.MythicTags;
-import eu.pb4.common.protection.api.CommonProtection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.FluidTags;
@@ -49,7 +48,7 @@ public final class EpicExplosion {
 
         MythicParticleSystem.EXPLOSIVE_EXPLOSION.spawn(world, new Vec3(x, y, z), (float) radius);
 
-        GameProfile gameProfile = cause != null ? cause.getGameProfile() : CommonProtection.UNKNOWN;
+        GameProfile gameProfile = cause != null ? cause.getGameProfile() : Protection.UNKNOWN;
 
         for (int ox = -radius; ox < radius; ox++) {
             for (int oy = -radius; oy < radius; oy++) {
@@ -90,7 +89,7 @@ public final class EpicExplosion {
         int radiusSq = radius * radius;
         var pos = new BlockPos.MutableBlockPos();
 
-        GameProfile playerId = cause != null ? cause.getGameProfile() : CommonProtection.UNKNOWN;
+        GameProfile playerId = cause != null ? cause.getGameProfile() : Protection.UNKNOWN;
 
         for (int ox = -radius; ox < radius; ox++) {
             for (int oy = -radius; oy < radius; oy++) {
@@ -99,7 +98,7 @@ public final class EpicExplosion {
 
                     pos.set(x + ox, y + oy, z + oz);
 
-                    if (!CommonProtection.canBreakBlock(world, pos, playerId, cause)) continue;
+                    if (!Protection.canBreakBlock(world, pos, playerId, cause)) continue;
 
                     var state = world.getBlockState(pos);
                     var fluidState = world.getFluidState(pos);

@@ -6,7 +6,6 @@ import com.mythicmetals.block.MythicBlocks;
 import com.mythicmetals.data.MythicTags;
 import com.mythicmetals.misc.*;
 import com.mythicmetals.registry.RegisterSounds;
-import eu.pb4.common.protection.api.CommonProtection;
 import io.wispforest.endec.impl.KeyedEndec;
 import io.wispforest.owo.serialization.endec.MinecraftEndecs;
 import org.jetbrains.annotations.Nullable;
@@ -94,7 +93,7 @@ public class BanglumNukeEntity extends BanglumTntEntity {
         }
 
         ServerPlayer playerCause = causingEntity instanceof ServerPlayer player ? player : null;
-        GameProfile playerCauseProfile = playerCause == null ? CommonProtection.UNKNOWN : playerCause.getGameProfile();
+        GameProfile playerCauseProfile = playerCause == null ? com.mythicmetals.misc.Protection.UNKNOWN : playerCause.getGameProfile();
         EpicExplosion.explode((ServerLevel) level(), (int) this.getX(), (int) this.getY(), (int) this.getZ(), radius, statePredicate, this, playerCause);
         Explosion explosion = new Explosion(this.level(), playerCause, (int) this.getX(), (int) this.getY(), (int) this.getZ(), radius, false, Explosion.BlockInteraction.DESTROY_WITH_DECAY);
 
@@ -110,7 +109,7 @@ public class BanglumNukeEntity extends BanglumTntEntity {
         // Handle damaging entities near the nuke explosion
         for (var entity : level().getEntities(this, AABB.ofSize(position(), radius * 2, radius * 2, radius * 2))) {
             if (entity.ignoreExplosion(explosion)) continue;
-            if (!CommonProtection.canDamageEntity(level(), entity, playerCauseProfile, playerCause)) continue;
+            if (!com.mythicmetals.misc.Protection.canDamageEntity(level(), entity, playerCauseProfile, playerCause)) continue;
 
             double distanceModifier = baseDamage - entity.distanceTo(this) / (double) radius;
             if (distanceModifier >= 0) {
