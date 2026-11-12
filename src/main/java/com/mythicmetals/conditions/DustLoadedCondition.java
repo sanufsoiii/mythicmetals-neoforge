@@ -2,21 +2,18 @@ package com.mythicmetals.conditions;
 
 import com.mojang.serialization.MapCodec;
 import com.mythicmetals.MythicMetals;
-import net.fabricmc.fabric.api.resource.conditions.v1.ResourceCondition;
-import net.fabricmc.fabric.api.resource.conditions.v1.ResourceConditionType;
-import net.minecraft.core.HolderLookup;
-import org.jetbrains.annotations.Nullable;
+import net.neoforged.neoforge.common.conditions.ICondition;
 
-public class DustLoadedCondition implements ResourceCondition {
+public class DustLoadedCondition implements ICondition {
     public static final MapCodec<DustLoadedCondition> CODEC = MapCodec.unit(DustLoadedCondition::new);
 
     @Override
-    public ResourceConditionType<?> getType() {
-        return MythicResourceConditions.DUSTS;
+    public MapCodec<? extends ICondition> codec() {
+        return CODEC;
     }
 
     @Override
-    public boolean test(@Nullable HolderLookup.Provider registryLookup) {
+    public boolean test(IContext context) {
         return MythicMetals.CONFIG.enableDusts();
     }
 }
