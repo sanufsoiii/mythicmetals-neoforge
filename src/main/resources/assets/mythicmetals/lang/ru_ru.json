@@ -9,5 +9,9 @@
   "mythicmetals.port.assets.check_again": "Проверить снова",
   "mythicmetals.port.assets.continue": "Продолжить без ассетов",
   "mythicmetals.port.assets.dont_show_again": "Больше не показывать",
-  "mythicmetals.port.assets.not_found": "Файл не найден в resourcepacks"
+  "mythicmetals.port.assets.not_found": "Файл не найден в resourcepacks",
+  "itemGroup.mythicmetals.main.button.port_github": "Неофициальный порт для NeoForge: трекер проблем (GitHub)",
+  "itemGroup.mythicmetals.main.button.port_curseforge": "Неофициальный порт для NeoForge на CurseForge",
+  "itemGroup.mythicmetals.main.button.port_modrinth": "Неофициальный порт для NeoForge на Modrinth",
+  "itemGroup.mythicmetals.main.button.port_discord": "Официальный Discord автора оригинала (Wraith Coding Sesh). Проблемы неофициального порта пишите на GitHub."
 }

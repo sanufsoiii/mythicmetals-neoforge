@@ -65,12 +65,20 @@ public class MythicMetals {
             group.addTab(Icon.of(MythicBlocks.ADAMANTITE.getStorageBlock()), "blocks", TagKey.create(Registries.ITEM, RegistryHelper.id("blocks")), false);
             group.addTab(Icon.of(MythicTools.ADAMANTITE.getPickaxe()), "tools", TagKey.create(Registries.ITEM, RegistryHelper.id("tool_tab")), false);
             group.addTab(Icon.of(MythicArmor.ADAMANTITE.getChestplate()), "armor", TagKey.create(Registries.ITEM, RegistryHelper.id("armor_tab")), false);
-            group.addButton(ItemGroupButton.github(group, "https://github.com/Noaaan/MythicMetals/issues"));
-            group.addButton(ItemGroupButton.curseforge(group, "https://www.curseforge.com/minecraft/mc-mods/mythicmetals"));
-            group.addButton(ItemGroupButton.modrinth(group, "https://modrinth.com/mod/mythicmetals"));
-            group.addButton(ItemGroupButton.discord(group, "https://discord.gg/69cKvQWScC"));
+            // Port: GitHub/CurseForge/Modrinth point to the unofficial NeoForge port, so its bugs don't land in the original tracker.
+            // Discord stays the original author's server. Buttons use own names ("port_*") so their tooltip keys
+            // (itemGroup.mythicmetals.main.button.port_*) are not overridden by the original jar's lang mounted from resourcepacks.
+            group.addButton(portLinkButton(group, 0, "port_github", "https://github.com/sanufsoiii/mythicmetals-neoforge/issues"));
+            group.addButton(portLinkButton(group, 32, "port_curseforge", "https://www.curseforge.com/minecraft/mc-mods/mythicmetals-neoforge"));
+            group.addButton(portLinkButton(group, 16, "port_modrinth", "https://modrinth.com/mod/mythicmetals-neoforge"));
+            group.addButton(portLinkButton(group, 48, "port_discord", "https://discord.gg/69cKvQWScC"));
         })
         .build();
+    }
+
+    // Same icons as owo's ItemGroupButton.github/modrinth/curseforge/discord (owo:textures/gui/icons.png, 16px cells: u = 0/16/32/48).
+    private static ItemGroupButton portLinkButton(OwoItemGroup group, int iconU, String name, String url) {
+        return ItemGroupButton.link(group, Icon.of(ItemGroupButton.ICONS_TEXTURE, iconU, 0, 64, 64), name, url);
     }
 
     // Cardinal Components keys -> data attachments (see MythicAttachments)

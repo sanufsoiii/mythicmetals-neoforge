@@ -9,5 +9,9 @@
   "mythicmetals.port.assets.check_again": "Check again",
   "mythicmetals.port.assets.continue": "Continue without assets",
   "mythicmetals.port.assets.dont_show_again": "Don't show again",
-  "mythicmetals.port.assets.not_found": "File not found in resourcepacks"
+  "mythicmetals.port.assets.not_found": "File not found in resourcepacks",
+  "itemGroup.mythicmetals.main.button.port_github": "Unofficial NeoForge port: issue tracker (GitHub)",
+  "itemGroup.mythicmetals.main.button.port_curseforge": "Unofficial NeoForge port on CurseForge",
+  "itemGroup.mythicmetals.main.button.port_modrinth": "Unofficial NeoForge port on Modrinth",
+  "itemGroup.mythicmetals.main.button.port_discord": "Official Discord of the original author (Wraith Coding Sesh). Problems with the unofficial port: report them on GitHub."
 }
