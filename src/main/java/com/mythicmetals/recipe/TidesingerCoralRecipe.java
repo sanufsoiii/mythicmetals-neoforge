@@ -40,7 +40,7 @@ public record TidesingerCoralRecipe(Ingredient base, Ingredient addition, Ingred
     }
 
     @Override
-    public ItemStack craft(SmithingRecipeInput input, HolderLookup.Provider lookup) {
+    public ItemStack assemble(SmithingRecipeInput input, HolderLookup.Provider lookup) {
         var armorStack = input.base().transmuteCopy(this.result().getItem(), 1);
         armorStack.set(MythicDataComponents.TIDESINGER, TidesingerPatternComponent.fromStack(input.addition()));
         return armorStack;

@@ -47,7 +47,7 @@ public record UpgradeSmithingRecipe(Ingredient base, Ingredient addition, ItemSt
     }
 
     @Override
-    public ItemStack craft(SmithingRecipeInput input, HolderLookup.Provider lookup) {
+    public ItemStack assemble(SmithingRecipeInput input, HolderLookup.Provider lookup) {
         var stack = input.base().copy();
 
         // Apply drill upgrade

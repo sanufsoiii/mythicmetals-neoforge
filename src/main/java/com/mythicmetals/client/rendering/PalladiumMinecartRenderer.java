@@ -14,7 +14,7 @@ public class PalladiumMinecartRenderer extends MinecartRenderer<PalladiumMinecar
     }
 
     @Override
-    public ResourceLocation getTexture(PalladiumMinecartEntity abstractMinecartEntity) {
+    public ResourceLocation getTextureLocation(PalladiumMinecartEntity abstractMinecartEntity) {
         return RegistryHelper.id("textures/models/palladium_minecart.png");
     }
 }

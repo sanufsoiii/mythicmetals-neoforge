@@ -44,7 +44,7 @@ public record MidasFoldingRecipe(Ingredient template, Ingredient base, Ingredien
     }
 
     @Override
-    public ItemStack craft(SmithingRecipeInput input, HolderLookup.Provider lookup) {
+    public ItemStack assemble(SmithingRecipeInput input, HolderLookup.Provider lookup) {
         var swordInputStack = input.base().copy();
 
         var goldComponent = swordInputStack.getOrDefault(GOLD_FOLDED, GoldFoldedComponent.of(0));

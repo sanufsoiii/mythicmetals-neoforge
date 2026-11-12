@@ -41,7 +41,7 @@ public class TippedRuniteArrowRecipe extends CustomRecipe {
         }
     }
 
-    public ItemStack craft(CraftingInput input, HolderLookup.Provider wrapperLookup) {
+    public ItemStack assemble(CraftingInput input, HolderLookup.Provider wrapperLookup) {
         ItemStack itemStack = input.getItem(1 + input.width());
         if (!itemStack.is(Items.LINGERING_POTION)) {
             return ItemStack.EMPTY;

@@ -45,7 +45,7 @@ public class BanglumTntEntityRenderer extends EntityRenderer<BanglumTntEntity> {
     }
 
     @Override
-    public ResourceLocation getTexture(BanglumTntEntity entity) {
+    public ResourceLocation getTextureLocation(BanglumTntEntity entity) {
         return TextureAtlas.LOCATION_BLOCKS;
 
     }
