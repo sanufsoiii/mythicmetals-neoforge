@@ -1,0 +1,13 @@
+{
+  "mythicmetals.port.assets.pack_name": "Mythic Metals: оригинальные ассеты",
+  "mythicmetals.port.assets.pack_description": "Текстуры, модели и звуки из вашего jar Mythic Metals в resourcepacks",
+  "mythicmetals.port.assets.title": "Mythic Metals — неофициальный порт для NeoForge",
+  "mythicmetals.port.assets.text": "Оригинальные текстуры, модели и звуки защищены авторским правом (All Rights Reserved), поэтому их нет в порте. Скачай оригинальный мод Mythic Metals для Fabric 1.21.1 и положи jar в папку resourcepacks — порт подключит из него только графику и звуки. Ставить его в mods не нужно.",
+  "mythicmetals.port.assets.download_curseforge": "Скачать оригинал (CurseForge)",
+  "mythicmetals.port.assets.download_modrinth": "Скачать оригинал (Modrinth)",
+  "mythicmetals.port.assets.open_folder": "Открыть папку resourcepacks",
+  "mythicmetals.port.assets.check_again": "Проверить снова",
+  "mythicmetals.port.assets.continue": "Продолжить без ассетов",
+  "mythicmetals.port.assets.dont_show_again": "Больше не показывать",
+  "mythicmetals.port.assets.not_found": "Файл не найден в resourcepacks"
+}
