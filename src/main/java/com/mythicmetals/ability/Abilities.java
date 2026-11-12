@@ -6,7 +6,6 @@ import com.mythicmetals.item.MythicItems;
 import com.mythicmetals.item.tools.MythicTools;
 import com.mythicmetals.item.tools.MythrilDrill;
 import com.mythicmetals.misc.UsefulSingletonForColorUtil.MetalColors;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Style;
 import net.minecraft.world.item.Items;
@@ -63,7 +62,7 @@ public class Abilities {
         MATERIAL_TOOLTIP.addItem(MythicItems.Mats.STORMYX_SHELL, Style.EMPTY.withColor(ChatFormatting.LIGHT_PURPLE));
         // Mod compat specific abilities
         // TODO - Uncomment once Origins compat is updated and tested
-        if (FabricLoader.getInstance().isModLoaded("origins")) {
+        if (net.neoforged.fml.ModList.get().isLoaded("origins")) {
             WATER_PROTECTION.addItem(MythicArmor.AQUARIUM.getChestplate(), MetalColors.AQUA_STYLE);
             WATER_PROTECTION.addItem(MythicArmor.AQUARIUM.getLeggings(), MetalColors.AQUA_STYLE);
             BETTER_WATER_PROTECTION.addItem(MythicArmor.TIDESINGER.getChestplate(), MetalColors.TIDESINGER_BLUE);

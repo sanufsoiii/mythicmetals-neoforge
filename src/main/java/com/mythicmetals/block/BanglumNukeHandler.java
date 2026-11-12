@@ -3,7 +3,10 @@ package com.mythicmetals.block;
 import com.mythicmetals.data.MythicTags;
 import com.mythicmetals.entity.BanglumNukeEntity;
 import com.mythicmetals.registry.RegisterSounds;
-import net.fabricmc.fabric.api.event.player.UseBlockCallback;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.sounds.SoundSource;
@@ -21,7 +24,18 @@ import net.minecraft.world.level.gameevent.GameEvent;
 
 public class BanglumNukeHandler {
     public static void init() {
-        UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {
+        // Fabric UseBlockCallback -> PlayerInteractEvent.RightClickBlock; a non-PASS result cancels the interaction
+        NeoForge.EVENT_BUS.<PlayerInteractEvent.RightClickBlock>addListener(event -> {
+            var result = onUseBlock(event.getEntity(), event.getLevel(), event.getHand(), event.getHitVec());
+            if (result != InteractionResult.PASS) {
+                event.setCanceled(true);
+                event.setCancellationResult(result);
+            }
+        });
+    }
+
+    private static InteractionResult onUseBlock(Player player, Level world, InteractionHand hand, BlockHitResult hitResult) {
+        {
             var stack = player.getItemInHand(hand);
 
             if (!stack.is(Items.FLINT_AND_STEEL)) return InteractionResult.PASS;
@@ -41,7 +55,7 @@ public class BanglumNukeHandler {
             }
 
             return InteractionResult.PASS;
-        });
+        }
     }
 
     public static boolean tryLightBigTntWithDispenser(BlockSource dispenser) {

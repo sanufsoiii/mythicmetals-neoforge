@@ -3,7 +3,6 @@ package com.mythicmetals.misc;
 import com.mythicmetals.MythicMetals;
 import com.mythicmetals.item.MythicItems;
 import io.wispforest.owo.ops.LootOps;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 
@@ -15,7 +14,7 @@ public class MythicLootOps {
         if (MythicMetals.CONFIG.unobtainium()) {
             LootOps.injectItem(MythicItems.Mats.UNOBTAINIUM, 0.01F, BuiltInLootTables.ANCIENT_CITY.location());
             LootOps.injectItem(MythicItems.Mats.UNOBTAINIUM, 0.00042F, BETTER_PIGLIN_BARTERING);
-            if (FabricLoader.getInstance().isModLoaded("custom_piglin_bartering")) {
+            if (net.neoforged.fml.ModList.get().isLoaded("custom_piglin_bartering")) {
                 LootOps.injectItem(MythicItems.Mats.UNOBTAINIUM, 0.00042F, CUSTOM_PIGLIN_BARTERING);
             }
         }

@@ -1,11 +1,9 @@
 package com.mythicmetals.misc;
 
-import com.mythicmetals.compat.ExplosiveEnhancementCompat;
 import io.wispforest.owo.particles.ClientParticles;
 import io.wispforest.owo.particles.systems.ParticleSystem;
 import io.wispforest.owo.particles.systems.ParticleSystemController;
 import io.wispforest.owo.util.VectorRandomUtils;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.phys.Vec3;
@@ -134,9 +132,9 @@ public class MythicParticleSystem {
     });
 
     public static final ParticleSystem<Float> EXPLOSIVE_EXPLOSION = CONTROLLER.register(Float.class, (world, pos, power) -> {
-        if (FabricLoader.getInstance().isModLoaded("explosiveenhancement")) {
-            ExplosiveEnhancementCompat.spawnParticles(world, pos.x, pos.y, pos.z, power);
-        }
+        // Only drew extra particles through the Explosive Enhancement compat (not available on NeoForge 1.21.1, moved
+        // to _excluded/). Without that mod the original did nothing here either. The system stays registered so the
+        // particle system ids and the server-side spawn calls are unchanged.
     });
 
     public static void init() {
