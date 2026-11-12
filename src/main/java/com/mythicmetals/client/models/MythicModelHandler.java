@@ -42,7 +42,7 @@ public class MythicModelHandler {
      */
     public static ModelLayerLocation model(String name, String layer) {
         var result = new ModelLayerLocation(RegistryHelper.id(name), layer);
-        EntityModelLayersAccessor.getLAYERS().add(result);
+        EntityModelLayersAccessor.getALL_MODELS().add(result);
         return result;
     }
 

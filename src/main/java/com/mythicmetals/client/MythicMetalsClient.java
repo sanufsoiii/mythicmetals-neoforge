@@ -7,7 +7,6 @@ import com.mythicmetals.block.MythicBlocks;
 import com.mythicmetals.block.entity.RegisterBlockEntityTypes;
 import com.mythicmetals.client.models.MythicModelHandler;
 import com.mythicmetals.client.rendering.*;
-import com.mythicmetals.compat.IsometricArmorStandExporter;
 import com.mythicmetals.component.*;
 import com.mythicmetals.data.MythicTags;
 import com.mythicmetals.entity.MythicEntities;
@@ -15,13 +14,30 @@ import com.mythicmetals.item.tools.*;
 import com.mythicmetals.misc.*;
 import com.mythicmetals.mixin.client.WorldRendererInvoker;
 import io.wispforest.owo.ui.util.Delta;
-import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
-import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
-import net.fabricmc.fabric.api.client.rendering.v1.*;
-import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.client.gui.screens.TitleScreen;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.entity.player.PlayerRenderer;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.HitResult;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
+import net.neoforged.neoforge.client.event.RenderHighlightEvent;
+import net.neoforged.neoforge.client.event.ScreenEvent;
+import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
+import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.player.AbstractClientPlayer;
@@ -29,6 +45,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -51,82 +68,133 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import java.util.ArrayList;
 
-public class MythicMetalsClient implements ClientModInitializer {
+@Mod(value = MythicMetals.MOD_ID, dist = Dist.CLIENT)
+public class MythicMetalsClient {
+    private static final Logger PORT_LOGGER = LoggerFactory.getLogger("mythicmetals-port");
+    private static boolean titleScreenReported = false;
+
     private long lastTime;
     private float time;
     public static ItemDisplayContext mode;
 
-    @Override
-    public void onInitializeClient() {
-        MythicModelHandler.init((loc, def) -> EntityModelLayerRegistry.registerModelLayer(loc, () -> def));
+    public MythicMetalsClient(IEventBus modBus) {
+        modBus.<EntityRenderersEvent.RegisterLayerDefinitions>addListener(event ->
+            MythicModelHandler.init((loc, def) -> event.registerLayerDefinition(loc, () -> def)));
 
         renderHammerOutline();
-        registerArmorRenderer();
-        registerModelPredicates();
-        registerSwirlRenderer();
+        modBus.<RegisterClientExtensionsEvent>addListener(this::registerArmorRenderer);
+        modBus.<EntityRenderersEvent.AddLayers>addListener(this::registerSwirlRenderer);
 
-        LivingEntityFeatureRenderEvents.ALLOW_CAPE_RENDER.register(player -> !CelestiumElytra.isWearing(player));
+        // Fabric LivingEntityFeatureRenderEvents.ALLOW_CAPE_RENDER(player -> !CelestiumElytra.isWearing(player)):
+        // applied directly in CapeFeatureRendererMixin (NeoForge has no such event).
 
-        EntityRendererRegistry.register(MythicEntities.PALLADIUM_MINECART_ENTITY_TYPE, PalladiumMinecartRenderer::new);
-        EntityRendererRegistry.register(MythicEntities.BANGLUM_TNT_MINECART_ENTITY_TYPE, BanglumTntMinecartEntityRenderer::new);
-        EntityRendererRegistry.register(MythicEntities.BANGLUM_TNT_ENTITY_TYPE, BanglumTntEntityRenderer::new);
-        EntityRendererRegistry.register(MythicEntities.BANGLUM_NUKE_ENTITY_TYPE, BanglumNukeEntityRenderer::new);
-        EntityRendererRegistry.register(MythicEntities.STAR_PLATINUM_ARROW_ENTITY_TYPE, StarPlatinumArrowEntityRenderer::new);
-        EntityRendererRegistry.register(MythicEntities.RUNITE_ARROW_ENTITY_TYPE, RuniteArrowEntityRenderer::new);
+        modBus.<EntityRenderersEvent.RegisterRenderers>addListener(event -> {
+            event.registerEntityRenderer(MythicEntities.PALLADIUM_MINECART_ENTITY_TYPE, PalladiumMinecartRenderer::new);
+            event.registerEntityRenderer(MythicEntities.BANGLUM_TNT_MINECART_ENTITY_TYPE, BanglumTntMinecartEntityRenderer::new);
+            event.registerEntityRenderer(MythicEntities.BANGLUM_TNT_ENTITY_TYPE, BanglumTntEntityRenderer::new);
+            event.registerEntityRenderer(MythicEntities.BANGLUM_NUKE_ENTITY_TYPE, BanglumNukeEntityRenderer::new);
+            event.registerEntityRenderer(MythicEntities.STAR_PLATINUM_ARROW_ENTITY_TYPE, StarPlatinumArrowEntityRenderer::new);
+            event.registerEntityRenderer(MythicEntities.RUNITE_ARROW_ENTITY_TYPE, RuniteArrowEntityRenderer::new);
 
-        BlockEntityRenderers.register(RegisterBlockEntityTypes.ENCHANTED_MIDAS_GOLD_BLOCK, EnchantedMidasBlockEntityRenderer::new);
+            event.registerBlockEntityRenderer(RegisterBlockEntityTypes.ENCHANTED_MIDAS_GOLD_BLOCK, EnchantedMidasBlockEntityRenderer::new);
+        });
 
-        ColorProviderRegistry.ITEM.register(UsefulSingletonForColorUtil::potionColor, MythicTools.TIPPED_RUNITE_ARROW);
+        modBus.<RegisterColorHandlersEvent.Item>addListener(event ->
+            event.register(UsefulSingletonForColorUtil::potionColor, MythicTools.TIPPED_RUNITE_ARROW));
 
-        CarmotShieldHudHandler.init();
-        ClientTickEvents.END_CLIENT_TICK.register(client -> CarmotShieldHudHandler.tick());
+        modBus.<FMLClientSetupEvent>addListener(event -> event.enqueueWork(() -> {
+            registerModelPredicates();
 
-        BlockRenderLayerMap.INSTANCE.putBlock(MythicBlocks.CARMOT_BELL_BLOCK, RenderType.cutoutMipped());
-        BlockRenderLayerMap.INSTANCE.putBlock(MythicBlocks.PALLADIUM_RAIL, RenderType.cutoutMipped());
-        BlockRenderLayerMap.INSTANCE.putBlock(MythicBlocks.AQUARIUM_GLASS, RenderType.translucent());
+            CarmotShieldHudHandler.init();
 
-        BlockRenderLayerMap.INSTANCE.putBlocks(RenderType.translucent(), MythicBlocks.KYBER.getStorageBlock());
+            ItemBlockRenderTypes.setRenderLayer(MythicBlocks.CARMOT_BELL_BLOCK, RenderType.cutoutMipped());
+            ItemBlockRenderTypes.setRenderLayer(MythicBlocks.PALLADIUM_RAIL, RenderType.cutoutMipped());
+            ItemBlockRenderTypes.setRenderLayer(MythicBlocks.AQUARIUM_GLASS, RenderType.translucent());
 
-        if (FabricLoader.getInstance().isModLoaded("isometric-renders")) {
-            ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
-                IsometricArmorStandExporter.register(dispatcher);
-            });
-        }
+            ItemBlockRenderTypes.setRenderLayer(MythicBlocks.KYBER.getStorageBlock(), RenderType.translucent());
+        }));
+
+        NeoForge.EVENT_BUS.<ClientTickEvent.Post>addListener(event -> CarmotShieldHudHandler.tick());
+
+        // Isometric Renders armor stand exporter: the mod does not exist on NeoForge 1.21.1 (compat moved to _excluded/).
 
         registerTooltipCallbacks();
+
+        NeoForge.EVENT_BUS.<ScreenEvent.Opening>addListener(MythicMetalsClient::onScreenOpening);
+    }
+
+    // Port boot self-check: reports reaching the title screen and the registered forge controllers.
+    private static void onScreenOpening(ScreenEvent.Opening event) {
+        if (titleScreenReported || !(event.getNewScreen() instanceof TitleScreen)) return;
+        titleScreenReported = true;
+
+        List<ResourceLocation> controllers = BuiltInRegistries.BLOCK.keySet().stream()
+            .filter(id -> id.getNamespace().equals("alloy_forgery") && id.getPath().endsWith("_forge_controller"))
+            .sorted()
+            .toList();
+
+        PORT_LOGGER.info("[mythicmetals-port] TITLE_SCREEN_REACHED");
+        PORT_LOGGER.info("[mythicmetals-port] FORGE_CONTROLLERS={} {}", controllers.size(), controllers);
+
+        if (Boolean.getBoolean("mythicmetals.port.exitOnTitle")) {
+            scheduleStop(Minecraft.getInstance(), 20);
+        }
+    }
+
+    private static void scheduleStop(Minecraft client, int ticksLeft) {
+        client.execute(() -> {
+            if (ticksLeft <= 0) {
+                client.stop();
+            } else {
+                scheduleStop(client, ticksLeft - 1);
+            }
+        });
     }
 
     @SuppressWarnings("unchecked")
-    private void registerSwirlRenderer() {
-        LivingEntityFeatureRendererRegistrationCallback.EVENT.register((entityType, entityRenderer, registrationHelper, context) -> {
-            if (entityType != EntityType.PLAYER) return;
-            registrationHelper.register(
-                new PlayerEnergySwirlFeatureRenderer(
-                    (RenderLayerParent<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>>) entityRenderer,
-                    context.getModelSet()));
-        });
+    private void registerSwirlRenderer(EntityRenderersEvent.AddLayers event) {
+        // Fabric LivingEntityFeatureRendererRegistrationCallback for EntityType.PLAYER -> every player skin renderer
+        for (var skin : event.getSkins()) {
+            EntityRenderer<? extends Player> renderer = event.getSkin(skin);
+            if (renderer instanceof PlayerRenderer playerRenderer) {
+                playerRenderer.addLayer(new PlayerEnergySwirlFeatureRenderer(
+                    (RenderLayerParent<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>>) playerRenderer,
+                    event.getEntityModels()));
+            }
+        }
     }
 
     /**
      * Renders the outline of a {@link HammerBase hammer item.}
      */
     private void renderHammerOutline() {
-        WorldRenderEvents.BLOCK_OUTLINE.register((worldRenderContext, blockOutlineContext) -> {
-            if (!blockOutlineContext.entity().isAlwaysTicking()) return true;
-            var player = (Player) blockOutlineContext.entity();
+        // Fabric WorldRenderEvents.BLOCK_OUTLINE -> RenderHighlightEvent.Block; "return false" = cancel the vanilla outline
+        NeoForge.EVENT_BUS.<RenderHighlightEvent.Block>addListener(event -> {
+            if (!mythicmetals$renderHammerOutline(event)) event.setCanceled(true);
+        });
+    }
+
+    private static boolean mythicmetals$renderHammerOutline(RenderHighlightEvent.Block event) {
+        {
+            var entity = event.getCamera().getEntity();
+            if (!entity.isAlwaysTicking()) return true;
+            var player = (Player) entity;
+            var outlinePos = event.getTarget().getBlockPos();
+            var outlineState = player.level().getBlockState(outlinePos);
+            var cameraPos = event.getCamera().getPosition();
 
             // Only render the outline if you are hovering over something the hammer can break
             var stack = player.getMainHandItem();
             if (stack.getItem() instanceof HammerBase hammer
-                && !blockOutlineContext.blockState().isAir()
-                && hammer.isCorrectToolForDrops(stack, blockOutlineContext.blockState())) {
+                && !outlineState.isAir()
+                && hammer.isCorrectToolForDrops(stack, outlineState)) {
 
                 var reach = BlockBreaker.getReachDistance(player);
                 BlockHitResult blockHitResult = (BlockHitResult) player.pick(reach, 1, false);
 
                 var facing = blockHitResult.getDirection().getOpposite();
-                var blocks = BlockBreaker.findBlocks(facing, blockOutlineContext.blockPos(), hammer.getDepth());
-                var originalPos = blockOutlineContext.blockPos();
+                var blocks = BlockBreaker.findBlocks(facing, outlinePos, hammer.getDepth());
+                var originalPos = outlinePos;
 
                 // Create VoxelShapes out of the block positions and put them in a list
                 var voxels = new ArrayList<VoxelShape>();
@@ -135,9 +203,9 @@ public class MythicMetalsClient implements ClientModInitializer {
                     var blockState = player.level().getBlockState(blockPos);
                     if (!blockState.isAir() && hammer.isCorrectToolForDrops(stack, blockState)) {
                         voxels.add(blockState.getShape(
-                                worldRenderContext.world(),
+                                player.level(),
                                 blockPos,
-                                CollisionContext.of(blockOutlineContext.entity())
+                                CollisionContext.of(entity)
                             ).move(blockPos.getX() - originalPos.getX(),
                                 blockPos.getY() - originalPos.getY(),
                                 blockPos.getZ() - originalPos.getZ())
@@ -152,12 +220,12 @@ public class MythicMetalsClient implements ClientModInitializer {
                 var outlineShape = outlineOptional.get();
 
                 WorldRendererInvoker.mythicmetals$drawShapeOutline(
-                    worldRenderContext.matrixStack(),
-                    worldRenderContext.consumers().getBuffer(RenderType.lines()),
+                    event.getPoseStack(),
+                    event.getMultiBufferSource().getBuffer(RenderType.lines()),
                     outlineShape,
-                    originalPos.getX() - blockOutlineContext.cameraX(),
-                    originalPos.getY() - blockOutlineContext.cameraY(),
-                    originalPos.getZ() - blockOutlineContext.cameraZ(),
+                    originalPos.getX() - cameraPos.x,
+                    originalPos.getY() - cameraPos.y,
+                    originalPos.getZ() - cameraPos.z,
                     0, 0, 0, 0.4F //RGBA
                 );
                 // Cancel the event to prevent the middle outline from rendering
@@ -166,37 +234,32 @@ public class MythicMetalsClient implements ClientModInitializer {
 
             // Keep moving along if we reach this point
             return true;
-        });
+        }
     }
 
-    private void registerArmorRenderer() {
+    private void registerArmorRenderer(RegisterClientExtensionsEvent event) {
         Item[] armors = BuiltInRegistries.ITEM.stream()
             .filter(i -> i instanceof HallowedArmor
                 && BuiltInRegistries.ITEM.getResourceKey(i).get().location().getNamespace().equals(MythicMetals.MOD_ID))
             .toArray(Item[]::new);
 
-        ArmorRenderer renderer = (matrices, vertexConsumer, stack, entity, slot, light, original) -> {
-
-            HallowedArmor armor = (HallowedArmor) stack.getItem();
-            var model = armor.getArmorModel();
-            var texture = armor.getArmorTexture(stack, slot);
-            original.copyPropertiesTo(model);
-            ArmorRenderer.renderPart(matrices, vertexConsumer, light, stack, model, texture);
-
-            // Armor trim time
-            if (!stack.is(MythicArmor.HALLOWED.getHelmet())) {
-                var trimComponent = stack.get(DataComponents.TRIM);
-                if (trimComponent != null) {
-                    var atlas = Minecraft.getInstance().getTextureAtlas(Sheets.ARMOR_TRIMS_SHEET);
-                    TextureAtlasSprite sprite = atlas.apply(slot == EquipmentSlot.LEGS ? trimComponent.innerTexture(armor.getMaterial()) : trimComponent.outerTexture(armor.getMaterial()));
-                    VertexConsumer trimVertexConsumer = sprite.wrap(
-                        ItemRenderer.getFoilBufferDirect(vertexConsumer, Sheets.armorTrimsSheet(trimComponent.pattern().value().decal()), true, stack.hasFoil())
-                    );
-                    model.renderToBuffer(matrices, trimVertexConsumer, light, OverlayTexture.NO_OVERLAY);
-                }
+        // Fabric ArmorRenderer -> IClientItemExtensions#getHumanoidArmorModel. The texture comes from
+        // HallowedArmor#getArmorTexture (IItemExtension), NeoForge's HumanoidArmorLayer renders the part,
+        // the enchantment glint and armor trims like the original renderer did.
+        event.registerItem(new IClientItemExtensions() {
+            @Override
+            public HumanoidModel<?> getHumanoidArmorModel(LivingEntity livingEntity, ItemStack stack, EquipmentSlot slot, HumanoidModel<?> original) {
+                HallowedArmor armor = (HallowedArmor) stack.getItem();
+                var model = armor.getArmorModel();
+                mythicmetals$copyProperties(original, model);
+                return model;
             }
-        };
-        ArmorRenderer.register(renderer, armors);
+        }, armors);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T extends LivingEntity> void mythicmetals$copyProperties(HumanoidModel<?> from, HumanoidModel<T> to) {
+        ((HumanoidModel<T>) from).copyPropertiesTo(to);
     }
 
     private void registerModelPredicates() {
@@ -242,7 +305,11 @@ public class MythicMetalsClient implements ClientModInitializer {
     }
 
     public void registerTooltipCallbacks() {
-        ItemTooltipCallback.EVENT.register((stack, context, type, lines) -> {
+        // Fabric ItemTooltipCallback -> ItemTooltipEvent
+        NeoForge.EVENT_BUS.<ItemTooltipEvent>addListener(event -> {
+            var stack = event.getItemStack();
+            var lines = event.getToolTip();
+            var type = event.getFlags();
             int index = 1;
 
             if (stack.is(MythicTags.BONUS_FORTUNE)) {

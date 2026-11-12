@@ -3,8 +3,6 @@ package com.mythicmetals.armor;
 import com.mythicmetals.client.models.HelmetModel;
 import com.mythicmetals.client.models.MythicModelHandler;
 import com.mythicmetals.misc.RegistryHelper;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.resources.ResourceLocation;
@@ -17,7 +15,6 @@ import org.jetbrains.annotations.NotNull;
 
 public class HallowedArmor extends ArmorItem {
 
-    @Environment(EnvType.CLIENT)
     private HumanoidModel<LivingEntity> model;
     public final ArmorItem.Type type;
 
@@ -30,7 +27,6 @@ public class HallowedArmor extends ArmorItem {
         this.type = slot;
     }
 
-    @Environment(EnvType.CLIENT)
     public HumanoidModel<LivingEntity> getArmorModel() {
         if (model == null) {
             model = provideArmorModelForSlot(type.getSlot());
@@ -38,7 +34,6 @@ public class HallowedArmor extends ArmorItem {
         return model;
     }
 
-    @Environment(EnvType.CLIENT)
     protected HumanoidModel<LivingEntity> provideArmorModelForSlot(EquipmentSlot slot) {
         var models = Minecraft.getInstance().getEntityModels();
         var root = models.bakeLayer(MythicModelHandler.HALLOWED_ARMOR);
@@ -48,5 +43,11 @@ public class HallowedArmor extends ArmorItem {
     @NotNull
     public ResourceLocation getArmorTexture(ItemStack stack, EquipmentSlot slot) {
         return RegistryHelper.id("textures/models/hallowed_model.png");
+    }
+
+    // NeoForge: HumanoidArmorLayer asks the item for the armor texture (Fabric: passed to ArmorRenderer.renderPart).
+    @Override
+    public ResourceLocation getArmorTexture(ItemStack stack, net.minecraft.world.entity.Entity entity, EquipmentSlot slot, ArmorMaterial.Layer layer, boolean innerModel) {
+        return getArmorTexture(stack, slot);
     }
 }

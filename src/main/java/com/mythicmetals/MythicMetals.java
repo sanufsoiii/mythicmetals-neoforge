@@ -22,25 +22,29 @@ import io.wispforest.owo.itemgroup.Icon;
 import io.wispforest.owo.itemgroup.OwoItemGroup;
 import io.wispforest.owo.itemgroup.gui.ItemGroupButton;
 import io.wispforest.owo.registration.reflect.FieldRegistrationHandler;
-import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.object.builder.v1.trade.TradeOfferHelper;
-import net.fabricmc.fabric.api.registry.FuelRegistry;
-import net.fabricmc.loader.api.FabricLoader;
+import com.mythicmetals.component.EntityComponentKey;
+import com.mythicmetals.component.MythicAttachments;
+import com.mythicmetals.data.MythicOreBiomeModifier;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.village.VillagerTradesEvent;
+import net.neoforged.neoforge.registries.RegisterEvent;
 import net.minecraft.core.dispenser.ProjectileDispenseBehavior;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.entity.vehicle.AbstractMinecart;
 import net.minecraft.world.level.block.DispenserBlock;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.ladysnake.cca.api.v3.component.ComponentKey;
-import org.ladysnake.cca.api.v3.component.ComponentRegistry;
-import org.ladysnake.cca.api.v3.entity.*;
 
-public class MythicMetals implements ModInitializer, EntityComponentInitializer {
+@Mod(MythicMetals.MOD_ID)
+public class MythicMetals {
     public static Logger LOGGER = LogManager.getLogger();
     public static final String MOD_ID = "mythicmetals";
     public static final int CONFIG_VERSION = 13;
@@ -50,7 +54,12 @@ public class MythicMetals implements ModInitializer, EntityComponentInitializer 
 
     public static MythicMetalsConfig CONFIG = MythicMetalsConfig.createAndLoad();
 
-    public static final OwoItemGroup TABBED_GROUP = OwoItemGroup.builder(RegistryHelper.id("main"), () -> Icon.of(MythicItems.STORMYX.getIngot()))
+    // owo's OwoItemGroup.Builder#build registers the tab immediately, so it is created at the start of onInitialize(),
+    // which runs inside RegisterEvent (on Fabric this was a static final field).
+    public static OwoItemGroup TABBED_GROUP;
+
+    private static OwoItemGroup createItemGroup() {
+        return OwoItemGroup.builder(RegistryHelper.id("main"), () -> Icon.of(MythicItems.STORMYX.getIngot()))
         .initializer(group -> {
             group.addTab(Icon.of(MythicItems.ADAMANTITE.getIngot()), "items", TagKey.create(Registries.ITEM, RegistryHelper.id("item_tab")), false);
             group.addTab(Icon.of(MythicBlocks.ADAMANTITE.getStorageBlock()), "blocks", TagKey.create(Registries.ITEM, RegistryHelper.id("blocks")), false);
@@ -62,17 +71,45 @@ public class MythicMetals implements ModInitializer, EntityComponentInitializer 
             group.addButton(ItemGroupButton.discord(group, "https://discord.gg/69cKvQWScC"));
         })
         .build();
+    }
 
-    public static final ComponentKey<CarmotShield> CARMOT_SHIELD = ComponentRegistry.getOrCreate(RegistryHelper.id("carmot_shield"), CarmotShield.class);
-    public static final ComponentKey<CombustionCooldown> COMBUSTION_COOLDOWN = ComponentRegistry.getOrCreate(RegistryHelper.id("combustion_cooldown"), CombustionCooldown.class);
+    // Cardinal Components keys -> data attachments (see MythicAttachments)
+    public static final EntityComponentKey<CarmotShield> CARMOT_SHIELD = MythicAttachments.CARMOT_SHIELD;
+    public static final EntityComponentKey<CombustionCooldown> COMBUSTION_COOLDOWN = MythicAttachments.COMBUSTION_COOLDOWN;
 
-    @Override
+    private static boolean initialized = false;
+
+    public MythicMetals(IEventBus modBus, ModContainer container) {
+        MythicAttachments.register(modBus);
+        MythicResourceConditions.init(modBus);
+        MythicOreBiomeModifier.register(modBus);
+
+        // Registries are only writable during RegisterEvent: run the original Fabric initializer once, at the first
+        // RegisterEvent (all built-in registries are unfrozen for the whole RegisterEvent phase), keeping its order.
+        modBus.addListener(EventPriority.HIGHEST, RegisterEvent.class, event -> {
+            if (!initialized) {
+                initialized = true;
+                onInitialize();
+            }
+        });
+
+        modBus.<FMLCommonSetupEvent>addListener(event -> event.enqueueWork(this::registerDispenserBehaviour));
+
+        // Fabric TradeOfferHelper.registerVillagerOffers(CLERIC, 5, ...)
+        NeoForge.EVENT_BUS.<VillagerTradesEvent>addListener(event -> {
+            if (event.getType() == VillagerProfession.CLERIC) {
+                event.getTrades().get(5).add(new VillagerTrades.ItemsForEmeralds(MythicItems.Templates.AEGIS_SMITHING_TEMPLATE, 48, 1, 2, 30));
+            }
+        });
+    }
+
     public void onInitialize() {
+        TABBED_GROUP = createItemGroup();
         FieldRegistrationHandler.register(RegisterSounds.class, MOD_ID, false);
         FieldRegistrationHandler.processSimple(MythicItems.class, false);
         FieldRegistrationHandler.register(MythicItems.Mats.class, MOD_ID, false);
         FieldRegistrationHandler.register(MythicItems.Templates.class, MOD_ID, false);
-        if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
+        if (!net.neoforged.fml.loading.FMLLoader.isProduction()) {
             FieldRegistrationHandler.register(MythicItems.ParticleSticks.class, MOD_ID, false);
         }
         FieldRegistrationHandler.processSimple(MythicItems.Copper.class, false);
@@ -93,19 +130,15 @@ public class MythicMetals implements ModInitializer, EntityComponentInitializer 
         MythicEntityAttributes.init();
         MythicEntities.init();
         TABBED_GROUP.initialize();
-        FuelRegistry.INSTANCE.add(MythicItems.Mats.MORKITE, 1200);
-        FuelRegistry.INSTANCE.add(MythicBlocks.MORKITE.getStorageBlock(), 12800);
-        MythicResourceConditions.init();
+        // Fuel (Morkite 1200, Morkite block 12800): data/neoforge/data_maps/item/furnace_fuels.json
+        // Resource conditions: registered as condition codecs in the constructor (MythicResourceConditions)
         RegisterLootConditions.init();
         MythicStatusEffects.init();
         MythicRecipeSerializers.init();
         FieldRegistrationHandler.processSimple(RegisterCriteria.class, false);
         BlockBreaker.initHammerTime();
         MythicLootOps.init();
-        TradeOfferHelper.registerVillagerOffers(VillagerProfession.CLERIC, 5, factories -> {
-            factories.add(new VillagerTrades.ItemsForEmeralds(MythicItems.Templates.AEGIS_SMITHING_TEMPLATE, 48, 1, 2, 30));
-        });
-        registerDispenserBehaviour();
+        // Villager trade: VillagerTradesEvent (constructor). Dispenser behaviour: FMLCommonSetupEvent (needs bound holders).
 
         if (CONFIG.configVersion() < CONFIG_VERSION) {
             for (int i = 0; i < 5; i++) {
@@ -113,26 +146,26 @@ public class MythicMetals implements ModInitializer, EntityComponentInitializer 
             }
         }
 
-        if (FabricLoader.getInstance().isModLoaded("harvest_scythes")) {
+        if (net.neoforged.fml.ModList.get().isLoaded("harvest_scythes")) {
             LOGGER.info("[Mythic Metals] I see HarvestScythes. I'll take care of DH so you don't have to");
         }
-        if (FabricLoader.getInstance().isModLoaded("enhancedcraft")) {
+        if (net.neoforged.fml.ModList.get().isLoaded("enhancedcraft")) {
             LOGGER.info("[Mythic Metals] Oh EnhancedCraft? If you ever see Spxctre tell him I said hi!");
         }
-        if (FabricLoader.getInstance().isModLoaded("origins")) {
+        if (net.neoforged.fml.ModList.get().isLoaded("origins")) {
             LOGGER.info("[Mythic Metals] Have fun using Origins!");
         }
-        if (FabricLoader.getInstance().isModLoaded("spectrum")) {
+        if (net.neoforged.fml.ModList.get().isLoaded("spectrum")) {
             LOGGER.info("[Mythic Metals] Spectrum is loaded! Good luck on finding all of its secrets...");
         }
-        if (FabricLoader.getInstance().isModLoaded("jello")) {
+        if (net.neoforged.fml.ModList.get().isLoaded("jello")) {
             LOGGER.info("[Mythic Metals] Is that Jello? Here comes the colors, weeeeeee!");
         }
-        if (FabricLoader.getInstance().isModLoaded("terralith")) {
+        if (net.neoforged.fml.ModList.get().isLoaded("terralith")) {
             LOGGER.info("[Mythic Metals] Terralith detected. Many ores can spawn in unexpected ways due to the new overworld. Modpack devs, take note of this");
         }
-        if (FabricLoader.getInstance().isModLoaded("ftb-chunks-fabric") || FabricLoader.getInstance().isModLoaded("ftb-chunks-neoforge")) {
-            if (!FabricLoader.getInstance().isModLoaded("ftb-xmod-compat-fabric")) {
+        if (net.neoforged.fml.ModList.get().isLoaded("ftb-chunks-fabric") || net.neoforged.fml.ModList.get().isLoaded("ftb-chunks-neoforge")) {
+            if (!net.neoforged.fml.ModList.get().isLoaded("ftb-xmod-compat-fabric")) {
                 for (int i = 0; i < 3; i++) {
                     LOGGER.error("[Mythic Metals] FTB Chunks is loaded but FTB XMod Compat Fabric addon is not. This means claim protection will not work for some items!");
                 }
@@ -146,12 +179,4 @@ public class MythicMetals implements ModInitializer, EntityComponentInitializer 
         DispenserBlock.registerBehavior(() -> MythicTools.RUNITE_ARROW, new ProjectileDispenseBehavior(MythicTools.RUNITE_ARROW));
         DispenserBlock.registerBehavior(() -> MythicTools.TIPPED_RUNITE_ARROW, new ProjectileDispenseBehavior(MythicTools.TIPPED_RUNITE_ARROW));
     }
-
-
-    @Override
-    public void registerEntityComponentFactories(EntityComponentFactoryRegistry registry) {
-        registry.registerFor(LivingEntity.class, COMBUSTION_COOLDOWN, CombustionCooldown::new);
-        registry.registerForPlayers(CARMOT_SHIELD, CarmotShield::new, RespawnCopyStrategy.INVENTORY);
-    }
-
 }
