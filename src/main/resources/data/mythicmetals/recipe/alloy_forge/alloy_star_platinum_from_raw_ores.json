@@ -1,0 +1,23 @@
+{
+  "type": "alloy_forgery:forging",
+  "inputs": [
+    {
+      "item": "mythicmetals:starrite"
+    },
+	{
+      "tag": "mythicmetals:raw_materials/platinum"
+    }
+  ],
+  "output": {
+    "id": "mythicmetals:star_platinum",
+    "count": 1
+  },
+  "overrides": {
+	"3+": {
+      "id": "mythicmetals:star_platinum",
+      "count": 2
+    }
+  },
+  "min_forge_tier": 2,
+  "fuel_per_tick": 10
+}

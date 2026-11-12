@@ -1,0 +1,28 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "mythicmetals:nuggets_enabled"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "n",
+    "s",
+    "f"
+  ],
+  "key": {
+    "n": {
+      "item": "mythicmetals:star_platinum_nugget"
+    },
+    "s": {
+      "tag": "c:wood_sticks"
+    },
+    "f": {
+      "item": "minecraft:feather"
+    }
+  },
+  "result": {
+    "id": "mythicmetals:star_platinum_arrow",
+    "count": 2
+  }
+}

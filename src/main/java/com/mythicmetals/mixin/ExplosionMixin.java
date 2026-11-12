@@ -1,0 +1,22 @@
+package com.mythicmetals.mixin;
+
+import com.mythicmetals.entity.BanglumTntEntity;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Explosion;
+import org.jetbrains.annotations.Nullable;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+@Mixin(Explosion.class)
+public class ExplosionMixin {
+
+    @Inject(method = "getIndirectSourceEntityInternal(Lnet/minecraft/world/entity/Entity;)Lnet/minecraft/world/entity/LivingEntity;", at = @At("HEAD"), cancellable = true)
+    private static void superBang(@Nullable Entity entity, CallbackInfoReturnable<LivingEntity> cir) {
+        if (entity instanceof BanglumTntEntity banglumTntEntity) {
+            cir.setReturnValue(banglumTntEntity.getCausingEntity());
+        }
+    }
+}

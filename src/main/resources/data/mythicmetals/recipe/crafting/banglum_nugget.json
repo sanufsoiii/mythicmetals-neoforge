@@ -1,0 +1,17 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "mythicmetals:nuggets_enabled"
+    }
+  ],
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "mythicmetals:banglum_ingot"
+    }
+  ],
+  "result": {
+    "id": "mythicmetals:banglum_nugget",
+    "count": 9
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "profession": "cleric",
+  "trades": {
+    "master": [
+      {
+        "type": "numismatic-overhaul:sell_stack",
+        "price": 6000,
+        "sell": {
+          "item": "mythicmetals:aegis_smithing_template",
+          "count": 1
+        },
+        "max_uses": 2,
+        "villager_experience": 30
+      }
+    ]
+  }
+}

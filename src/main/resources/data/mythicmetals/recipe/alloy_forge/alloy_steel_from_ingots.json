@@ -1,0 +1,17 @@
+{
+  "type": "alloy_forgery:forging",
+  "inputs": [
+    {
+      "tag": "c:ingots/iron"
+    },
+	{
+      "tag": "c:ingots/manganese"
+    }
+  ],
+  "output": {
+    "id": "mythicmetals:steel_ingot",
+    "count": 2
+  },
+  "min_forge_tier": 1,
+  "fuel_per_tick": 5
+}

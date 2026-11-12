@@ -1,0 +1,35 @@
+{
+  "parent": "mythicmetals:enchanted_midas_gold_block",
+  "display": {
+    "title": {
+      "translate": "advancement.mythicmetals.royal_midas_smithing_template.title"
+    },
+    "description": {
+      "translate": "advancement.mythicmetals.royal_midas_smithing_template.description"
+    },
+    "icon": {
+      "id": "mythicmetals:royal_midas_smithing_template"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "one_template_to_rule_them_all": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "mythicmetals:royal_midas_smithing_template"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "rewards": {
+    "experience": 25
+  }
+}

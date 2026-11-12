@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "mmm",
+    "m m"
+  ],
+  "key": {
+    "m": {
+      "item": "mythicmetals:runite_ingot"
+    }
+  },
+  "result": {
+    "id": "mythicmetals:runite_helmet",
+    "count": 1
+  }
+}

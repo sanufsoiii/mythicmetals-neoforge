@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "mmm",
+    "m m"
+  ],
+  "key": {
+    "m": {
+      "tag": "c:ingots/orichalcum"
+    }
+  },
+  "result": {
+    "id": "mythicmetals:orichalcum_helmet",
+    "count": 1
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "parent": "mythicmetals:forge",
+  "display": {
+    "title": {
+      "translate": "advancement.mythicmetals.forgery.title"
+    },
+    "description": {
+      "translate": "advancement.mythicmetals.forgery.description"
+    },
+    "icon": {
+      "id": "alloy_forgery:polished_blackstone_forge_controller"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "we_do_a_little_bit_of_forgery": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "alloy_forgery:polished_blackstone_forge_controller",
+              "alloy_forgery:prismarine_bricks_forge_controller",
+              "alloy_forgery:end_stone_bricks_forge_controller",
+              "alloy_forgery:adamantite_block_forge_controller"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

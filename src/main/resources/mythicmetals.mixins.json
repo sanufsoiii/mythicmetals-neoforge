@@ -1,0 +1,50 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.mythicmetals.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "AbstractBlockStateMixin",
+    "AbstractMinecartEntityMixin",
+    "AbstractMinecartEntityTypeMixin",
+    "AnvilBlockMixin",
+    "ApplyBonusLootFunctionMixin",
+    "AreaEffectCloudEntityMixin",
+    "ArmorItemMixin",
+    "BucketItemMixin",
+    "CampfireBlockMixin",
+    "ConduitBlockEntityMixin",
+    "CreeperEntityMixin",
+    "DefaultedRegistryMixin",
+    "DispenserBehaviorMixin",
+    "EnchantedCountIncreaseLootFunctionMixin",
+    "EnchantmentHelperMixin",
+    "EntityMixin",
+    "ExplosionMixin",
+    "FireworkRocketEntityMixin",
+    "ItemMixin",
+    "ItemStackComponentizationFixin",
+    "LivingEntityMixin",
+    "MagmaBlockMixin",
+    "PiglinBrainMixin",
+    "PlayerEntityMixin",
+    "PowderSnowBlockMixin",
+    "RangedWeaponItemMixin",
+    "TableBonusLootConditionMixin"
+  ],
+  "client": [
+    "client.CapeFeatureRendererMixin",
+    "client.ElytraFeatureRendererMixin",
+    "client.EntityModelLayersAccessor",
+    "client.ItemRendererMixin",
+    "client.LivingEntityMixin",
+    "client.PlayerEntityRendererMixin",
+    "client.SmithingScreenMixin",
+    "client.TranslationStorageMixin",
+    "client.WorldRendererInvoker"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "plugin": "com.mythicmetals.mixin.MythicMetalsMixinPlugin"
+}

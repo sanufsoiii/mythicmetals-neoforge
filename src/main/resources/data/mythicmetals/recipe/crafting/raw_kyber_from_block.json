@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "mythicmetals:raw_kyber_block"
+    }
+  ],
+  "result": {
+    "id": "mythicmetals:raw_kyber",
+    "count": 9
+  }
+}

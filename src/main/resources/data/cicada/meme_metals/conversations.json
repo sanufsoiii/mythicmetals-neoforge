@@ -1,0 +1,54 @@
+{
+  "mod_id": "mythicmetals",
+  "conversations": {
+    "cicada:greetings": {
+      "lines": [
+        {
+          "text": "A Cicada? Free Gray Dye...",
+          "order": 64
+        }
+      ]
+    },
+    "mythicmetals:independence_day": {
+      "priority": {
+        "priority": 1000,
+        "override": 100
+      },
+      "condition": {
+        "type": "cicada:date",
+        "month": 5,
+        "day": 17
+      },
+      "lines": [
+        {
+          "order": 0,
+          "text": "Gratulerer med dagen!"
+        }
+      ]
+    },
+    "cicada:good_old_days": {
+      "lines": [
+        {
+          "text": "Stop babbling!... need to mine more Unobtainium.",
+          "order": 64
+        }
+      ]
+    },
+    "cicada:christmas": {
+      "lines": [
+        {
+          "text": "Happy holidays!",
+          "order": 64
+        }
+      ]
+    },
+    "cicada:new_year": {
+      "lines": [
+        {
+          "text": "\uD83C\uDF86\uD83C\uDF86\uD83C\uDF86",
+          "order": 39
+        }
+      ]
+    }
+  }
+}

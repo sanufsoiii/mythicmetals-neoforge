@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "mmm",
+    "m m",
+    "m m"
+  ],
+  "key": {
+    "m": {
+      "tag": "c:ingots/mythril"
+    }
+  },
+  "result": {
+    "id": "mythicmetals:mythril_leggings",
+    "count": 1
+  }
+}

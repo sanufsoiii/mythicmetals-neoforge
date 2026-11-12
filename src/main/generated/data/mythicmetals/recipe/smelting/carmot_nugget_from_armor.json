@@ -1,0 +1,28 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "mythicmetals:nuggets_enabled"
+    }
+  ],
+  "type": "minecraft:smelting",
+  "category": "misc",
+  "cookingtime": 200,
+  "experience": 0.1,
+  "ingredient": [
+    {
+      "item": "mythicmetals:carmot_helmet"
+    },
+    {
+      "item": "mythicmetals:carmot_chestplate"
+    },
+    {
+      "item": "mythicmetals:carmot_leggings"
+    },
+    {
+      "item": "mythicmetals:carmot_boots"
+    }
+  ],
+  "result": {
+    "id": "mythicmetals:carmot_nugget"
+  }
+}

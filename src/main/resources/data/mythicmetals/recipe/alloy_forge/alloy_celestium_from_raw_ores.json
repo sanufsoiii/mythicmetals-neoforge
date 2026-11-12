@@ -1,0 +1,32 @@
+{
+  "type": "alloy_forgery:forging",
+  "inputs": [
+    {
+      "item": "mythicmetals:starrite"
+    },
+	{
+      "tag": "mythicmetals:raw_materials/platinum"
+    },
+    {
+      "item": "mythicmetals:raw_carmot"
+    },
+	{
+      "item": "mythicmetals:raw_kyber"
+    },
+    {
+      "item": "mythicmetals:unobtainium"
+    }
+  ],
+  "output": {
+    "id": "mythicmetals:celestium_ingot",
+    "count": 1
+  },
+  "overrides": {
+	"3+": {
+      "id": "mythicmetals:celestium_ingot",
+      "count": 2
+    }
+  },
+  "min_forge_tier": 2,
+  "fuel_per_tick": 10
+}

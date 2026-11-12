@@ -1,0 +1,32 @@
+{
+  "parent": "mythicmetals:stormyx",
+  "display": {
+    "title": {
+      "translate": "advancement.mythicmetals.stormyx_shell.title"
+    },
+    "description": {
+      "translate": "advancement.mythicmetals.stormyx_shell.description"
+    },
+    "icon": {
+      "id": "mythicmetals:stormyx_shell"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "true_nether_diamond": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "mythicmetals:stormyx_shell"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "parent": "mythicmetals:maxed_gilded_midas_gold_sword",
+  "display": {
+    "title": {
+      "translate": "advancement.mythicmetals.enchanted_midas_gold_block.title"
+    },
+    "description": {
+      "translate": "advancement.mythicmetals.enchanted_midas_gold_block.description"
+    },
+    "icon": {
+      "id": "mythicmetals:enchanted_midas_gold_block"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "bribing_piglins_until_i_cry": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "mythicmetals:enchanted_midas_gold_block"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "rewards": {
+    "experience": 15
+  }
+}

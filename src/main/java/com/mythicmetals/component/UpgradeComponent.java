@@ -1,0 +1,78 @@
+package com.mythicmetals.component;
+
+import com.mythicmetals.MythicMetals;
+import io.wispforest.endec.Endec;
+import io.wispforest.endec.impl.StructEndecBuilder;
+import io.wispforest.owo.serialization.endec.MinecraftEndecs;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
+import net.minecraft.ChatFormatting;
+import net.minecraft.Util;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipProvider;
+
+public record UpgradeComponent(List<Item> items, int size) implements TooltipProvider {
+
+    public UpgradeComponent(int size) {
+        this(Util.make(new ArrayList<>(), items1 -> {
+            for (int i = 0; i < size; i++) {
+                items1.add(Items.AIR);
+            }
+        }), size);
+    }
+
+    public static final Endec<UpgradeComponent> ENDEC = StructEndecBuilder.of(
+        MinecraftEndecs.ofRegistry(BuiltInRegistries.ITEM).listOf().fieldOf("items", UpgradeComponent::items),
+        Endec.INT.fieldOf("size", UpgradeComponent::size),
+        UpgradeComponent::new
+    );
+
+    public static UpgradeComponent empty(int size) {
+        return new UpgradeComponent(size);
+    }
+
+    // TODO - Consider refactoring to use a builder or some nicer pattern
+    public static UpgradeComponent addItem(UpgradeComponent oldComponent, Item item) {
+        var newList = new ArrayList<>(oldComponent.items);
+        newList.remove(Items.AIR);
+        newList.addFirst(item);
+        return new UpgradeComponent(newList, oldComponent.size);
+    }
+
+    /**
+     * Check if any upgrade is installed in a specified slot
+     */
+    public boolean hasUpgrade(Item upgradeItem) {
+        return this.items.contains(upgradeItem);
+    }
+
+    public boolean isEmpty() {
+        for (Item item : this.items) {
+            if (item != Items.AIR) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean hasFreeSlots() {
+        return this.items.contains(Items.AIR);
+    }
+
+    @Override
+    public void addToTooltip(Item.TooltipContext context, Consumer<Component> tooltip, TooltipFlag type) {
+        if (this.size > 0 && this.isEmpty()) {
+            tooltip.accept(Component.translatable("tooltip.upgrade_component.tooltip").setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
+        }
+
+        if (this.size > this.items.size()) {
+            MythicMetals.LOGGER.warn("Upgrade Component is larger than the initial item list");
+        }
+    }
+}

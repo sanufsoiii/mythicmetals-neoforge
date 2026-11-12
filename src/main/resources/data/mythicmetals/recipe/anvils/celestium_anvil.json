@@ -1,0 +1,26 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "mythicmetals:anvils_enabled"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    " R ",
+    "RRR"
+  ],
+  "key": {
+    "#": {
+      "item": "mythicmetals:celestium_block"
+    },
+    "R": {
+      "item": "mythicmetals:celestium_ingot"
+    }
+  },
+  "result": {
+    "id": "mythicmetals:celestium_anvil",
+    "count": 1
+  },
+  "group": "mm_anvils"
+}

@@ -1,0 +1,32 @@
+{
+  "parent": "mythicmetals:banglum",
+  "display": {
+    "title": {
+      "translate": "advancement.mythicmetals.banglum_chunk.title"
+    },
+    "description": {
+      "translate": "advancement.mythicmetals.banglum_chunk.description"
+    },
+    "icon": {
+      "id": "mythicmetals:banglum_chunk"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "super_bang": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "mythicmetals:banglum_chunk"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "mythicmetals:dust_enabled"
+    }
+  ],
+  "type": "minecraft:blasting",
+  "category": "misc",
+  "cookingtime": 100,
+  "experience": 1.0,
+  "ingredient": {
+    "item": "mythicmetals:runite_dust"
+  },
+  "result": {
+    "id": "mythicmetals:runite_ingot"
+  }
+}

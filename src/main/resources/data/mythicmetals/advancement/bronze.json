@@ -1,0 +1,32 @@
+{
+  "parent": "mythicmetals:forge",
+  "display": {
+    "title": {
+      "translate": "advancement.mythicmetals.bronze.title"
+    },
+    "description": {
+      "translate": "advancement.mythicmetals.bronze.description"
+    },
+    "icon": {
+      "id": "mythicmetals:bronze_ingot"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "criteria": {
+    "big_bang": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "mythicmetals:bronze_ingot"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

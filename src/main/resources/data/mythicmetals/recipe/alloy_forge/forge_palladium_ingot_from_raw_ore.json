@@ -1,0 +1,21 @@
+{
+  "type": "alloy_forgery:forging",
+  "inputs": [
+    {
+      "item": "mythicmetals:raw_palladium",
+      "count": 2
+    }
+  ],
+  "output": {
+    "id": "mythicmetals:palladium_ingot",
+    "count": 2
+  },
+  "overrides": {
+    "3+": {
+      "id": "mythicmetals:palladium_ingot",
+      "count": 3
+    }
+  },
+  "min_forge_tier": 2,
+  "fuel_per_tick": 15
+}

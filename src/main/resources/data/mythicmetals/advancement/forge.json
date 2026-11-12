@@ -1,0 +1,34 @@
+{
+  "parent": "mythicmetals:root",
+  "display": {
+    "title": {
+      "translate": "advancement.mythicmetals.forge.title"
+    },
+    "description": {
+      "translate": "advancement.mythicmetals.forge.description"
+    },
+    "icon": {
+      "id": "alloy_forgery:bricks_forge_controller"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "criteria": {
+    "smol_forg": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "alloy_forgery:bricks_forge_controller",
+			  "alloy_forgery:stone_bricks_forge_controller",
+			  "alloy_forgery:deepslate_bricks_forge_controller"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

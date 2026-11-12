@@ -1,0 +1,17 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "mythicmetals:dust_enabled"
+    }
+  ],
+  "type": "minecraft:blasting",
+  "category": "misc",
+  "cookingtime": 100,
+  "experience": 0.1,
+  "ingredient": {
+    "item": "mythicmetals:celestium_dust"
+  },
+  "result": {
+    "id": "mythicmetals:celestium_ingot"
+  }
+}

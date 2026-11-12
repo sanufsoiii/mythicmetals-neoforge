@@ -1,0 +1,41 @@
+{
+  "type": "alloy_forgery:forging",
+  "inputs": [
+    {
+      "item": "minecraft:emerald_block"
+    },
+    {
+      "item": "minecraft:beacon"
+    },
+    {
+      "item": "minecraft:totem_of_undying"
+    },
+    {
+      "item": "minecraft:netherite_block"
+    },
+    {
+      "item": "minecraft:dragon_egg"
+    },
+    {
+      "item": "mythicmetals:unobtainium_block"
+    },
+    {
+      "item": "mythicmetals:metallurgium_block"
+    },
+    {
+      "item": "mythicmetals:celestium_block"
+    },
+	{
+      "item": "minecraft:enchanted_golden_apple"
+    },
+    {
+      "item": "minecraft:ochre_froglight"
+    }
+  ],
+  "output": {
+    "id": "mythicmetals:froge",
+    "count": 1
+  },
+  "min_forge_tier": 3,
+  "fuel_per_tick": 3700
+}

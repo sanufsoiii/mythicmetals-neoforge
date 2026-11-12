@@ -1,0 +1,17 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "mythicmetals:nuggets_enabled"
+    }
+  ],
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "c:ingots/copper"
+    }
+  ],
+  "result": {
+    "id": "mythicmetals:copper_nugget",
+    "count": 9
+  }
+}

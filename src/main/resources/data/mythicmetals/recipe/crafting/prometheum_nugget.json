@@ -1,0 +1,17 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "mythicmetals:nuggets_enabled"
+    }
+  ],
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "mythicmetals:prometheum_ingot"
+    }
+  ],
+  "result": {
+    "id": "mythicmetals:prometheum_nugget",
+    "count": 9
+  }
+}

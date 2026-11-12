@@ -1,0 +1,26 @@
+{
+  "type": "alloy_forgery:forging",
+  "inputs": [
+    {
+      "tag": "mythicmetals:ores/adamantite"
+    },
+	{
+      "tag": "mythicmetals:ores/mythril"
+    },
+	{
+      "tag": "mythicmetals:ores/orichalcum"
+    }
+  ],
+  "output": {
+    "id": "mythicmetals:hallowed_ingot",
+    "count": 2
+  },
+  "overrides": {
+	"3+": {
+      "id": "mythicmetals:hallowed_ingot",
+      "count": 3
+    }
+  },
+  "min_forge_tier": 2,
+  "fuel_per_tick": 15
+}

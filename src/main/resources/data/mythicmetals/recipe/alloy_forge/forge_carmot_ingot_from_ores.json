@@ -1,0 +1,20 @@
+{
+  "type": "alloy_forgery:forging",
+  "inputs": [
+    {
+      "tag": "mythicmetals:ores/carmot"
+    }
+  ],
+  "output": {
+    "id": "mythicmetals:carmot_ingot",
+    "count": 2
+  },
+  "overrides": {
+    "3+": {
+      "id": "mythicmetals:carmot_ingot",
+      "count": 3
+    }
+  },
+  "min_forge_tier": 1,
+  "fuel_per_tick": 5
+}

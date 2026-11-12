@@ -1,0 +1,20 @@
+{
+  "type": "alloy_forgery:forging",
+  "inputs": [
+    {
+      "tag": "mythicmetals:ores/prometheum"
+    }
+  ],
+  "output": {
+    "id": "mythicmetals:prometheum_ingot",
+    "count": 2
+  },
+  "overrides": {
+    "3+": {
+      "id": "mythicmetals:prometheum_ingot",
+      "count": 3
+    }
+  },
+  "min_forge_tier": 1,
+  "fuel_per_tick": 10
+}

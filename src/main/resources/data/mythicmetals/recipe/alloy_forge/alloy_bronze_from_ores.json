@@ -1,0 +1,24 @@
+{
+  "type": "alloy_forgery:forging",
+  "inputs": [
+    {
+      "tag": "c:ores/copper",
+      "count": 2
+    },
+	{
+      "tag": "mythicmetals:ores/tin"
+    }
+  ],
+  "output": {
+    "id": "mythicmetals:bronze_ingot",
+    "count": 4
+  },
+  "overrides": {
+    "2+": {
+      "id": "mythicmetals:bronze_ingot",
+      "count": 5
+    }
+  },
+  "min_forge_tier": 1,
+  "fuel_per_tick": 5
+}

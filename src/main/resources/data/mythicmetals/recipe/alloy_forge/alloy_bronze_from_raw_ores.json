@@ -1,0 +1,24 @@
+{
+  "type": "alloy_forgery:forging",
+  "inputs": [
+    {
+      "item": "minecraft:raw_copper",
+      "count": 2
+    },
+	{
+      "item": "mythicmetals:raw_tin"
+    }
+  ],
+  "output": {
+    "id": "mythicmetals:bronze_ingot",
+    "count": 2
+  },
+  "overrides": {
+    "2+": {
+      "id": "mythicmetals:bronze_ingot",
+      "count": 3
+    }
+  },
+  "min_forge_tier": 1,
+  "fuel_per_tick": 5
+}

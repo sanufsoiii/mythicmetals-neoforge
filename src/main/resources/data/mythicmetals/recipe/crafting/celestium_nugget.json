@@ -1,0 +1,17 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "mythicmetals:nuggets_enabled"
+    }
+  ],
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "mythicmetals:celestium_ingot"
+    }
+  ],
+  "result": {
+    "id": "mythicmetals:celestium_nugget",
+    "count": 9
+  }
+}

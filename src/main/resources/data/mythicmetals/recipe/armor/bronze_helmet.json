@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "mmm",
+    "m m"
+  ],
+  "key": {
+    "m": {
+      "tag": "c:ingots/bronze"
+    }
+  },
+  "result": {
+    "id": "mythicmetals:bronze_helmet",
+    "count": 1
+  }
+}

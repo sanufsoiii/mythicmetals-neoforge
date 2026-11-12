@@ -1,0 +1,34 @@
+{
+  "parent": "mythicmetals:forge",
+  "display": {
+    "title": {
+      "translate": "advancement.mythicmetals.runite.title"
+    },
+    "description": {
+      "translate": "advancement.mythicmetals.runite.description"
+    },
+    "icon": {
+      "id": "mythicmetals:runite_ore"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "buying_gf": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "mythicmetals:raw_runite",
+              "mythicmetals:runite_ore",
+              "mythicmetals:deepslate_runite_ore"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

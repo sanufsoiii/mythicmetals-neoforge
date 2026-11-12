@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "mmm",
+    "m m",
+    "m m"
+  ],
+  "key": {
+    "m": {
+      "tag": "c:ingots/bronze"
+    }
+  },
+  "result": {
+    "id": "mythicmetals:bronze_leggings",
+    "count": 1
+  }
+}

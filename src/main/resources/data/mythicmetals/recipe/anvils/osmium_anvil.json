@@ -1,0 +1,26 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "mythicmetals:anvils_enabled"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    " R ",
+    "RRR"
+  ],
+  "key": {
+    "#": {
+      "tag": "c:storage_blocks/osmium"
+    },
+    "R": {
+      "tag": "c:ingots/osmium"
+    }
+  },
+  "result": {
+    "id": "mythicmetals:osmium_anvil",
+    "count": 1
+  },
+  "group": "mm_anvils"
+}
