@@ -34,11 +34,11 @@ public class PlayerEntityRendererMixin {
      */
     @Inject(method = "renderHand", at = @At("TAIL"))
     private void mythicmetals$renderShieldArm(PoseStack matrices, MultiBufferSource vertexConsumers, int light, AbstractClientPlayer player, ModelPart arm, ModelPart sleeve, CallbackInfo ci) {
-        if (player.getComponent(MythicMetals.CARMOT_SHIELD).shouldRenderShield()) {
+        if (com.mythicmetals.component.MythicAttachments.CARMOT_SHIELD.get(player).shouldRenderShield()) {
             final var client = Minecraft.getInstance();
             float f = player.tickCount + (client.isPaused() ? 0 : client.getTimer().getGameTimeDeltaPartialTick(true));
 
-            var shield = player.getComponent(MythicMetals.CARMOT_SHIELD);
+            var shield = com.mythicmetals.component.MythicAttachments.CARMOT_SHIELD.get(player);
 
             var consumer = vertexConsumers.getBuffer(RenderType.energySwirl(SWIRL_TEXTURE, (f * .005f) % 1f, f * .005f % 1f));
             matrices.scale(1.0625f, 1.0625f, 1.0625f);

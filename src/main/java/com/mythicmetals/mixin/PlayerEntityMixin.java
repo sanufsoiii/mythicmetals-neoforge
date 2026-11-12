@@ -75,7 +75,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements IsAttack
 
     @Inject(method = "tick", at = @At("TAIL"))
     private void tickCarmotShield(CallbackInfo ci) {
-        getComponent(MythicMetals.CARMOT_SHIELD).tickShield();
+        com.mythicmetals.component.MythicAttachments.CARMOT_SHIELD.get(this).tickShield();
     }
 
     @ModifyVariable(
@@ -86,7 +86,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements IsAttack
         ordinal = 0,
         argsOnly = true)
     public float carmotShieldCancel(float amount) {
-        var shield = getComponent(MythicMetals.CARMOT_SHIELD);
+        var shield = com.mythicmetals.component.MythicAttachments.CARMOT_SHIELD.get(this);
         if (shield.getMaxHealth() > 0) {
             float health = shield.shieldHealth;
             shield.damageShield(amount);

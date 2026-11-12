@@ -133,7 +133,7 @@ public abstract class LivingEntityMixin extends Entity {
 
     @Unique
     private void mythicmetals$tickCombustion() {
-        var component = getComponent(MythicMetals.COMBUSTION_COOLDOWN);
+        var component = com.mythicmetals.component.MythicAttachments.COMBUSTION_COOLDOWN.get(this);
         component.tickCooldown();
         mythicmetals$handleCombustion(component);
     }
@@ -212,7 +212,7 @@ public abstract class LivingEntityMixin extends Entity {
         if (!this.level().isClientSide()) return;
         Vec3 velocity = this.getDeltaMovement();
 
-        if (this.isAlwaysTicking() && this.getComponent(MythicMetals.CARMOT_SHIELD).shieldHealth == 0) {
+        if (this.isAlwaysTicking() && com.mythicmetals.component.MythicAttachments.CARMOT_SHIELD.get(this).shieldHealth == 0) {
             return; // If you are a player, and your shield ran out, do not display particles
         }
 

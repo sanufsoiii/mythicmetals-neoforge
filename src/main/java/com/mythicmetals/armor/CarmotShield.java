@@ -6,10 +6,9 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
-import org.ladysnake.cca.api.v3.component.Component;
-import org.ladysnake.cca.api.v3.component.sync.AutoSyncedComponent;
+import com.mythicmetals.component.EntityComponentKey;
 
-public class CarmotShield implements Component, AutoSyncedComponent {
+public class CarmotShield implements EntityComponentKey.NbtComponent {
     private final Player player;
     public float shieldHealth;
     public int renderTime;
@@ -67,7 +66,7 @@ public class CarmotShield implements Component, AutoSyncedComponent {
 
         if (shouldRenderShield()) {
             renderTime--;
-            MythicMetals.CARMOT_SHIELD.sync(player);
+            com.mythicmetals.component.MythicAttachments.CARMOT_SHIELD.sync(player);
         }
 
         // No shield, stop rendering

@@ -34,8 +34,8 @@ public class PlayerEnergySwirlFeatureRenderer extends RenderLayer<AbstractClient
 
     @Override
     public void render(PoseStack matrices, MultiBufferSource vertexConsumers, int light, AbstractClientPlayer entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
-        if (entity.getComponent(MythicMetals.CARMOT_SHIELD).shouldRenderShield()) {
-            var shield = entity.getComponent(MythicMetals.CARMOT_SHIELD);
+        if (com.mythicmetals.component.MythicAttachments.CARMOT_SHIELD.get(entity).shouldRenderShield()) {
+            var shield = com.mythicmetals.component.MythicAttachments.CARMOT_SHIELD.get(entity);
             float f = entity.tickCount + tickDelta;
 
             this.swirlModel.prepareMobModel(entity, limbAngle, limbDistance, tickDelta);

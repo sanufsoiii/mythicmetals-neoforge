@@ -42,7 +42,7 @@ public class CarmotShieldHudHandler {
     public static void tick() {
         if (Hud.hasComponent(COMPONENT_ID) && Minecraft.getInstance().player != null) {
             var player = Minecraft.getInstance().player;
-            var carmotShield = player.getComponent(MythicMetals.CARMOT_SHIELD);
+            var carmotShield = com.mythicmetals.component.MythicAttachments.CARMOT_SHIELD.get(player);
             var shieldBar = (CarmotShieldComponent) ((ParentComponent) Hud.getComponent(COMPONENT_ID)).childById(TextureComponent.class, SHIELD_COMPONENT_ID);
             var background = (CarmotShieldComponent) ((ParentComponent) Hud.getComponent(COMPONENT_ID)).childById(TextureComponent.class, SHIELD_BACKGROUND_ID);
 

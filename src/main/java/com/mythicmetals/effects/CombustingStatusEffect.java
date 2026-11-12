@@ -14,7 +14,7 @@ public class CombustingStatusEffect extends MobEffect {
     @Override
     public void onMobRemoved(LivingEntity entity, int amplifier, Entity.RemovalReason reason) {
         super.onMobRemoved(entity, amplifier, reason);
-        entity.getComponent(MythicMetals.COMBUSTION_COOLDOWN).setCooldown(500);
+        com.mythicmetals.component.MythicAttachments.COMBUSTION_COOLDOWN.get(entity).setCooldown(500);
     }
 
     @Override
