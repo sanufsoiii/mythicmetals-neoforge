@@ -2,8 +2,6 @@ package com.mythicmetals.data;
 
 import com.google.common.collect.ImmutableList;
 import com.mythicmetals.config.OreConfig;
-import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
-import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.data.worldgen.features.FeatureUtils;
@@ -32,7 +30,8 @@ import java.util.List;
 public class OreFeatureHelper {
 
     public static void ore(ResourceKey<PlacedFeature> ore, TagKey<Biome> tag) {
-        BiomeModifications.addFeature(BiomeSelectors.tag(tag), GenerationStep.Decoration.UNDERGROUND_ORES, ore);
+        // Fabric BiomeModifications.addFeature -> applied by MythicOreBiomeModifier (neoforge:biome_modifier)
+        MythicOreBiomeModifier.addFeature(tag, GenerationStep.Decoration.UNDERGROUND_ORES, ore);
     }
 
     public static void configuredFeature(BootstrapContext<ConfiguredFeature<?, ?>> registerable, ResourceKey<ConfiguredFeature<?, ?>> featureKey, RuleTest rule, Block oreBlock, OreConfig config) {

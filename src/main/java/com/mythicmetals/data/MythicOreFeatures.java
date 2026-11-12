@@ -1,8 +1,6 @@
 package com.mythicmetals.data;
 
 import com.mythicmetals.misc.RegistryHelper;
-import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
-import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.levelgen.GenerationStep;
@@ -137,15 +135,15 @@ public class MythicOreFeatures {
 
         // Add Aquarium to Aquatic Biomes
         if (CONFIG.aquarium()) {
-            BiomeModifications.addFeature(BiomeSelectors.tag(MythicOreBiomeTags.AQUARIUM_BIOMES), GenerationStep.Decoration.UNDERGROUND_ORES, AQUARIUM);
+            MythicOreBiomeModifier.addFeature((MythicOreBiomeTags.AQUARIUM_BIOMES), GenerationStep.Decoration.UNDERGROUND_ORES, AQUARIUM);
         }
         // Add Prometheum to hot biomes
         if (CONFIG.prometheum()) {
-            BiomeModifications.addFeature(BiomeSelectors.tag(MythicOreBiomeTags.PROMETHEUM_BIOMES), GenerationStep.Decoration.UNDERGROUND_ORES, PROMETHEUM);
+            MythicOreBiomeModifier.addFeature((MythicOreBiomeTags.PROMETHEUM_BIOMES), GenerationStep.Decoration.UNDERGROUND_ORES, PROMETHEUM);
         }
         // Add Osmium to mountainous biomes
         if (CONFIG.osmium()) {
-            BiomeModifications.addFeature(BiomeSelectors.tag(MythicOreBiomeTags.OSMIUM_BIOMES), GenerationStep.Decoration.UNDERGROUND_ORES, OSMIUM);
+            MythicOreBiomeModifier.addFeature((MythicOreBiomeTags.OSMIUM_BIOMES), GenerationStep.Decoration.UNDERGROUND_ORES, OSMIUM);
         }
     }
 
