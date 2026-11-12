@@ -69,8 +69,8 @@ public class MythicMetals {
             // Discord stays the original author's server. Buttons use own names ("port_*") so their tooltip keys
             // (itemGroup.mythicmetals.main.button.port_*) are not overridden by the original jar's lang mounted from resourcepacks.
             group.addButton(portLinkButton(group, 0, "port_github", "https://github.com/sanufsoiii/mythicmetals-neoforge/issues"));
-            group.addButton(portLinkButton(group, 32, "port_curseforge", "https://www.curseforge.com/minecraft/mc-mods/mythicmetals-neoforge"));
-            group.addButton(portLinkButton(group, 16, "port_modrinth", "https://modrinth.com/mod/mythicmetals-neoforge"));
+            group.addButton(portLinkButton(group, 32, "port_curseforge", "https://www.curseforge.com/minecraft/mc-mods/mythic-metals-unofficial"));
+            group.addButton(portLinkButton(group, 16, "port_modrinth", "https://modrinth.com/mod/mythic-metals-unofficial"));
             group.addButton(portLinkButton(group, 48, "port_discord", "https://discord.gg/69cKvQWScC"));
         })
         .build();
