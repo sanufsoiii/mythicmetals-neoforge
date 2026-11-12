@@ -1,6 +1,5 @@
 package com.mythicmetals.mixin;
 
-import net.fabricmc.loader.api.FabricLoader;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
@@ -21,9 +20,9 @@ public class MythicMetalsMixinPlugin implements IMixinConfigPlugin {
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
         return switch (mixinClassName) {
-            case "com.mythicmetals.mixin.DamageOverTimePowerMixin" -> FabricLoader.getInstance().isModLoaded("origins");
+            case "com.mythicmetals.mixin.DamageOverTimePowerMixin" -> mythicmetals$isModLoaded("origins");
             case "com.mythicmetals.mixin.PiglinBrainMixin" ->
-                !FabricLoader.getInstance().isModLoaded("custom_piglin_bartering");
+                !mythicmetals$isModLoaded("custom_piglin_bartering");
             default -> true;
         };
     }
@@ -46,5 +45,10 @@ public class MythicMetalsMixinPlugin implements IMixinConfigPlugin {
     @Override
     public void postApply(String targetClassName, ClassNode targetClass, String mixinClassName, IMixinInfo mixinInfo) {
 
+    }
+
+    // ModList does not exist yet while mixins are being configured; LoadingModList does.
+    private static boolean mythicmetals$isModLoaded(String modId) {
+        return net.neoforged.fml.loading.LoadingModList.get().getModFileById(modId) != null;
     }
 }

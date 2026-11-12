@@ -24,7 +24,7 @@ import static net.minecraft.world.entity.ai.attributes.AttributeModifier.Operati
 @Mixin(ArmorItem.class)
 public abstract class ArmorItemMixin {
 
-    @Inject(method = "method_56689", at = @At(value = "INVOKE", target = "Lnet/minecraft/resources/ResourceLocation;withDefaultNamespace(Ljava/lang/String;)Lnet/minecraft/resources/ResourceLocation;"), locals = LocalCapture.CAPTURE_FAILSOFT)
+    @Inject(method = "lambda$new$0", at = @At(value = "INVOKE", target = "Lnet/minecraft/resources/ResourceLocation;withDefaultNamespace(Ljava/lang/String;)Lnet/minecraft/resources/ResourceLocation;"), locals = LocalCapture.CAPTURE_FAILSOFT)
     private static void constructor(Holder<?> registryEntry, ArmorItem.Type type, CallbackInfoReturnable<ItemAttributeModifiers> cir, int i, float f, ItemAttributeModifiers.Builder builder, EquipmentSlotGroup slot) {
         var material = registryEntry.value();
         if (material == MythicArmorMaterials.TIDESINGER) {

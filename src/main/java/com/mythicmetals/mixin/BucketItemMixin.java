@@ -32,8 +32,9 @@ public abstract class BucketItemMixin {
         return original;
     }
 
-    @Inject(method = "emptyContents", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;isLiquid()Z"), cancellable = true)
-    private void mythicmetals$fillLavalog(Player player, Level world, BlockPos pos, BlockHitResult hitResult, CallbackInfoReturnable<Boolean> cir) {
+    // NeoForge: the logic lives in the 5-arg emptyContents (with the container stack); Yarn isLiquid = Mojang liquid
+    @Inject(method = "emptyContents(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/phys/BlockHitResult;Lnet/minecraft/world/item/ItemStack;)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;liquid()Z"), cancellable = true)
+    private void mythicmetals$fillLavalog(Player player, Level world, BlockPos pos, BlockHitResult hitResult, net.minecraft.world.item.ItemStack container, CallbackInfoReturnable<Boolean> cir) {
         var state = world.getBlockState(pos);
         if (this.content.equals(Fluids.LAVA) && state.getBlock() instanceof Lavaloggable lavaloggable) {
             // TODO - Vanilla behavior here is to eat the fluid if you log the same block twice

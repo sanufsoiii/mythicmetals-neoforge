@@ -6,7 +6,7 @@ import com.mojang.math.Axis;
 import com.mythicmetals.armor.MythicArmor;
 import com.mythicmetals.client.models.MythicModelHandler;
 import com.mythicmetals.client.models.StarPlatCloakModel;
-import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityFeatureRenderEvents;
+import com.mythicmetals.armor.CelestiumElytra;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -33,9 +33,14 @@ public abstract class CapeFeatureRendererMixin extends RenderLayer<AbstractClien
 
     @Inject(method = "render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ILnet/minecraft/client/player/AbstractClientPlayer;FFFFFF)V", at = @At("HEAD"), cancellable = true)
     public void render(PoseStack ms, MultiBufferSource vertices, int light, AbstractClientPlayer player, float f, float g, float h, float j, float k, float l, CallbackInfo ci) {
-        if (!player.isModelPartShown(PlayerModelPart.CAPE) || player.getSkin().capeTexture() != null) return;
-        if (!LivingEntityFeatureRenderEvents.ALLOW_CAPE_RENDER.invoker().allowCapeRender(player))
+        // Fabric: LivingEntityFeatureRenderEvents.ALLOW_CAPE_RENDER (no NeoForge equivalent). Fabric API checks it for the
+        // whole cape layer (vanilla capes included); the only listener Mythic Metals registered was
+        // "!CelestiumElytra.isWearing(player)", so that check is applied here and suppresses any cape.
+        if (CelestiumElytra.isWearing(player)) {
+            ci.cancel();
             return;
+        }
+        if (!player.isModelPartShown(PlayerModelPart.CAPE) || player.getSkin().capeTexture() != null) return;
 
         // Custom Hallowed Cape when no other cape is present
         if (player.getItemBySlot(EquipmentSlot.CHEST).getItem() == MythicArmor.HALLOWED.getChestplate().asItem()) {
