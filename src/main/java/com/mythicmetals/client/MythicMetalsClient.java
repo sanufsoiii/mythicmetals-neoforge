@@ -121,6 +121,10 @@ public class MythicMetalsClient {
         registerTooltipCallbacks();
 
         NeoForge.EVENT_BUS.<ScreenEvent.Opening>addListener(MythicMetalsClient::onScreenOpening);
+
+        // Original (All Rights Reserved) assets from the player's own jar in resourcepacks/ + notice if it is missing
+        com.mythicmetals.port.assets.OriginalAssetsPack.register(modBus);
+        com.mythicmetals.port.assets.MissingAssetsNotice.register();
     }
 
     // Port boot self-check: reports reaching the title screen and the registered forge controllers.
