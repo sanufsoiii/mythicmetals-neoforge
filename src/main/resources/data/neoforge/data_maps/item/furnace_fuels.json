@@ -1,0 +1,10 @@
+{
+  "values": {
+    "mythicmetals:morkite": {
+      "burn_time": 1200
+    },
+    "mythicmetals:morkite_block": {
+      "burn_time": 12800
+    }
+  }
+}
