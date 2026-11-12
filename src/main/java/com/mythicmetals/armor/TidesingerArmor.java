@@ -5,8 +5,6 @@ import com.mythicmetals.client.models.TidesingerBipedModel;
 import com.mythicmetals.component.MythicDataComponents;
 import com.mythicmetals.component.TidesingerPatternComponent;
 import com.mythicmetals.misc.RegistryHelper;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.network.chat.Component;
@@ -21,7 +19,6 @@ import java.util.List;
 
 public class TidesingerArmor extends HallowedArmor {
 
-    @Environment(EnvType.CLIENT)
     private HumanoidModel<LivingEntity> model;
     public final Type type;
 
@@ -34,7 +31,6 @@ public class TidesingerArmor extends HallowedArmor {
         this.type = slot;
     }
 
-    @Environment(EnvType.CLIENT)
     public HumanoidModel<LivingEntity> getArmorModel() {
         if (model == null) {
             model = provideArmorModelForSlot(type.getSlot());
@@ -42,7 +38,6 @@ public class TidesingerArmor extends HallowedArmor {
         return model;
     }
 
-    @Environment(EnvType.CLIENT)
     @Override
     protected HumanoidModel<LivingEntity> provideArmorModelForSlot(EquipmentSlot slot) {
         var models = Minecraft.getInstance().getEntityModels();

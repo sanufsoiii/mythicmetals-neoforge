@@ -5,7 +5,7 @@ import com.mythicmetals.component.UpgradeComponent;
 import com.mythicmetals.data.MythicTags;
 import com.mythicmetals.item.MythicItems;
 import io.wispforest.owo.particles.ClientParticles;
-import net.fabricmc.fabric.api.tag.convention.v2.ConventionalEnchantmentTags;
+import net.neoforged.neoforge.common.Tags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.Mth;
@@ -53,7 +53,7 @@ public class BanglumOreBlock extends DropExperienceBlock {
                 if (enchantment.is(MythicTags.SILK_TOUCH_LIKE)) {
                     chance -= 45;
                 }
-                if (enchantment.is(ConventionalEnchantmentTags.INCREASE_BLOCK_DROPS)) {
+                if (enchantment.is(Tags.Enchantments.INCREASE_BLOCK_DROPS)) {
                     chance += enchantments.getLevel(enchantment) * 7;
                 }
                 if (enchantment.is(MythicTags.INCREASES_MINING_SPEED)) {

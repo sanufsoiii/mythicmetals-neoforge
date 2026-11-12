@@ -4,7 +4,6 @@ import com.mythicmetals.entity.MythicEntityAttributes;
 import com.mythicmetals.item.MythicItems;
 import com.mythicmetals.misc.RegistryHelper;
 import com.mythicmetals.registry.RegisterSounds;
-import net.fabricmc.fabric.api.entity.event.v1.FabricElytraItem;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.sounds.SoundEvent;
@@ -18,7 +17,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.level.gameevent.GameEvent;
 
-public class CelestiumElytra extends ElytraItem implements FabricElytraItem {
+public class CelestiumElytra extends ElytraItem {
     public CelestiumElytra(Properties settings) {
         super(settings);
     }
@@ -38,7 +37,14 @@ public class CelestiumElytra extends ElytraItem implements FabricElytraItem {
         return stack.is(MythicArmor.CELESTIUM_ELYTRA) && isFlyEnabled(stack);
     }
 
+    // Fabric: FabricElytraItem#useCustomElytra -> fly while isFlyEnabled, then doVanillaElytraTick.
+    // NeoForge: ElytraItem#canElytraFly already checks isFlyEnabled; the tick is overridden here.
     @Override
+    public boolean elytraFlightTick(ItemStack chestStack, LivingEntity entity, int flightTicks) {
+        doVanillaElytraTick(entity, chestStack);
+        return true;
+    }
+
     public void doVanillaElytraTick(LivingEntity entity, ItemStack chestStack) {
         int nextRoll = entity.getFallFlyingTicks() + 1;
 

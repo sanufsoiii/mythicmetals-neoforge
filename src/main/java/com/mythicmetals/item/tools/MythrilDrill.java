@@ -5,7 +5,7 @@ import com.mythicmetals.component.*;
 import com.mythicmetals.data.MythicTags;
 import com.mythicmetals.item.MythicItems;
 import com.mythicmetals.misc.RegistryHelper;
-import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
+import net.neoforged.neoforge.common.Tags;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -154,7 +154,7 @@ public class MythrilDrill extends DiggerItem implements AutoRepairable {
             }
             stack.set(MythicDataComponents.DRILL, drillComponent.reduce(drillComponent.fuel()));
 
-            if (state.is(ConventionalBlockTags.ORES)) {
+            if (state.is(Tags.Blocks.ORES)) {
                 // Do not perform this if silk touch is present
                 for (Holder<Enchantment> enchantment : stack.getEnchantments().keySet()) {
                     if (enchantment.is(MythicTags.SILK_TOUCH_LIKE)) {
@@ -212,8 +212,16 @@ public class MythrilDrill extends DiggerItem implements AutoRepairable {
         }
     }
 
+    // Fabric FabricItem#allowContinuingBlockBreaking -> NeoForge shouldCauseBlockBreakReset (inverted; Fabric only
+    // asks when the item is the same and its components changed)
     @Override
-    public boolean allowContinuingBlockBreaking(Player player, ItemStack oldStack, ItemStack newStack) {
+    public boolean shouldCauseBlockBreakReset(ItemStack oldStack, ItemStack newStack) {
+        if (!newStack.is(oldStack.getItem())) return true;
+        if (ItemStack.isSameItemSameComponents(oldStack, newStack)) return false;
+        return !allowContinuingBlockBreaking(oldStack, newStack);
+    }
+
+    public boolean allowContinuingBlockBreaking(ItemStack oldStack, ItemStack newStack) {
         // Allow you to break blocks when fuel ticks down
         return oldStack.has(MythicDataComponents.DRILL) && newStack.has(MythicDataComponents.DRILL) || oldStack.getDamageValue() != newStack.getDamageValue();
     }

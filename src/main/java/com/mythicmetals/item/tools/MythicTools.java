@@ -7,7 +7,6 @@ import com.mythicmetals.item.tools.carmot_staff.CarmotStaffItem;
 import com.mythicmetals.misc.RegistryHelper;
 import com.mythicmetals.misc.UsefulSingletonForColorUtil;
 import io.wispforest.owo.registration.reflect.SimpleFieldProcessingSubject;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -207,6 +206,11 @@ public class MythicTools implements SimpleFieldProcessingSubject<ToolSet> {
     public static class Frogery {
 
         public static class Froger extends Item {
+            @Override
+            public EquipmentSlot getEquipmentSlot(ItemStack stack) {
+                return EquipmentSlot.HEAD;
+            }
+
 
             public Froger(Properties settings) {
                 super(settings);
@@ -214,7 +218,7 @@ public class MythicTools implements SimpleFieldProcessingSubject<ToolSet> {
 
             @Override
             public InteractionResult interactLivingEntity(ItemStack stack, Player user, LivingEntity entity, InteractionHand hand) {
-                if (entity.getType() == EntityType.FROG && FabricLoader.getInstance().isModLoaded("delightful-froge")) {
+                if (entity.getType() == EntityType.FROG && net.neoforged.fml.ModList.get().isLoaded("delightful-froge")) {
                     ((Frog) entity).setVariant(BuiltInRegistries.FROG_VARIANT.getHolder(ResourceLocation.fromNamespaceAndPath("delightful", "froge")).orElseThrow());
                     return InteractionResult.SUCCESS;
                 }
@@ -222,11 +226,16 @@ public class MythicTools implements SimpleFieldProcessingSubject<ToolSet> {
             }
         }
 
-        public static final Item FROGE = new Froger(new Item.Properties().rarity(Rarity.EPIC).fireResistant().equipmentSlot((entity, stack) -> EquipmentSlot.HEAD));
+        // Fabric Item.Settings#equipmentSlot(HEAD) -> IItemExtension#getEquipmentSlot override
+        public static final Item FROGE = new Froger(new Item.Properties().rarity(Rarity.EPIC).fireResistant());
         public static final Item DOGE = new Item(new Item.Properties()
             .rarity(Rarity.EPIC).fireResistant()
-            .equipmentSlot((entity, stack) -> EquipmentSlot.HEAD)
             .stacksTo(1)
-            .jukeboxPlayable(ResourceKey.create(Registries.JUKEBOX_SONG, RegistryHelper.id("dog4"))));
+            .jukeboxPlayable(ResourceKey.create(Registries.JUKEBOX_SONG, RegistryHelper.id("dog4")))) {
+            @Override
+            public EquipmentSlot getEquipmentSlot(ItemStack stack) {
+                return EquipmentSlot.HEAD;
+            }
+        };
     }
 }

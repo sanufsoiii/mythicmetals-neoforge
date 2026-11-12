@@ -2,8 +2,6 @@ package com.mythicmetals.block;
 
 import com.mythicmetals.misc.UsefulSingletonForColorUtil;
 import io.wispforest.owo.particles.ClientParticles;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.util.RandomSource;
@@ -19,7 +17,6 @@ public class StarriteOreBlock extends DropExperienceBlock {
     }
 
     @Override
-    @Environment(EnvType.CLIENT)
     public void animateTick(BlockState state, Level world, BlockPos pos, RandomSource random) {
         ClientParticles.spawnCenteredOnBlock(new DustParticleOptions(new Vector3f(UsefulSingletonForColorUtil.MetalColors.STARRITE.hsv()), 1F), world, pos, 2.0D);
     }

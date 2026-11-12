@@ -112,8 +112,13 @@ public class StormyxShield extends ShieldItem {
 
     // Don't update the item in hand if durability is repaired
     // Might affect mending as a side effect
+    // Fabric FabricItem#allowComponentsUpdateAnimation -> NeoForge shouldCauseReequipAnimation (Fabric only asks
+    // when the item is the same and its components changed)
     @Override
-    public boolean allowComponentsUpdateAnimation(Player player, InteractionHand hand, ItemStack oldStack, ItemStack newStack) {
-        return oldStack.getDamageValue() == newStack.getDamageValue();
+    public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
+        if (!slotChanged && newStack.is(oldStack.getItem()) && !ItemStack.isSameItemSameComponents(oldStack, newStack)) {
+            return oldStack.getDamageValue() == newStack.getDamageValue();
+        }
+        return !oldStack.equals(newStack); // IItemExtension default
     }
 }
