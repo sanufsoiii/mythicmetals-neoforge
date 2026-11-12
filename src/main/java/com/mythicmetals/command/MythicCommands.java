@@ -19,9 +19,11 @@ import com.mythicmetals.item.tools.*;
 import com.mythicmetals.misc.RegistryHelper;
 import com.mythicmetals.misc.StringUtilsAtHome;
 import io.wispforest.owo.util.ReflectionUtils;
-import net.fabricmc.fabric.api.command.v2.ArgumentTypeRegistry;
-import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
-import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.commands.synchronization.ArgumentTypeInfos;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.ResourceOrIdArgument;
@@ -66,15 +68,25 @@ public final class MythicCommands {
         ReflectionUtils.iterateAccessibleStaticFields(MythicOreConfigs.class, OreConfig.class, (value, name, field) -> {
             ORE_CONFIG.put(name, value);
         });
-        ArgumentTypeRegistry.registerArgumentType(RegistryHelper.id("toolset"), ToolSetArgumentType.class, SingletonArgumentInfo.contextFree(ToolSetArgumentType::toolSet));
-        ArgumentTypeRegistry.registerArgumentType(RegistryHelper.id("armorset"), ArmorSetArgumentType.class, SingletonArgumentInfo.contextFree(ArmorSetArgumentType::armorSet));
-        ArgumentTypeRegistry.registerArgumentType(RegistryHelper.id("ore-config"), OreConfigArgumentType.class, SingletonArgumentInfo.contextFree(OreConfigArgumentType::oreConfig));
-        ArgumentTypeRegistry.registerArgumentType(RegistryHelper.id("blockset"), BlockSetArgumentType.class, SingletonArgumentInfo.contextFree(BlockSetArgumentType::blockSet));
+        registerArgumentType(RegistryHelper.id("toolset"), ToolSetArgumentType.class, SingletonArgumentInfo.contextFree(ToolSetArgumentType::toolSet));
+        registerArgumentType(RegistryHelper.id("armorset"), ArmorSetArgumentType.class, SingletonArgumentInfo.contextFree(ArmorSetArgumentType::armorSet));
+        registerArgumentType(RegistryHelper.id("ore-config"), OreConfigArgumentType.class, SingletonArgumentInfo.contextFree(OreConfigArgumentType::oreConfig));
+        registerArgumentType(RegistryHelper.id("blockset"), BlockSetArgumentType.class, SingletonArgumentInfo.contextFree(BlockSetArgumentType::blockSet));
+    }
+
+    // Fabric ArgumentTypeRegistry.registerArgumentType: registry entry + class lookup used for (de)serialization.
+    // Called from init(), which runs inside RegisterEvent.
+    private static <A extends com.mojang.brigadier.arguments.ArgumentType<?>, T extends net.minecraft.commands.synchronization.ArgumentTypeInfo.Template<A>> void registerArgumentType(
+            net.minecraft.resources.ResourceLocation id, Class<A> clazz, net.minecraft.commands.synchronization.ArgumentTypeInfo<A, T> info) {
+        Registry.register(BuiltInRegistries.COMMAND_ARGUMENT_TYPE, id, ArgumentTypeInfos.registerByClass(clazz, info));
     }
 
     // TODO - Add new command for grabbing the data-generated ore features, and create a datapack skeleton
     public static void registerCommands() {
-        CommandRegistrationCallback.EVENT.register((dispatcher, access, env) -> {
+        // Fabric CommandRegistrationCallback -> RegisterCommandsEvent
+        NeoForge.EVENT_BUS.<RegisterCommandsEvent>addListener(event -> {
+            var dispatcher = event.getDispatcher();
+            var access = event.getBuildContext();
             var mythicRoot = Commands.literal("mythicmetals").requires(src -> src.hasPermission(2)).build();
             var range = Commands.literal("range").build();
             var tools = Commands.literal("tools").build();
@@ -185,7 +197,7 @@ public final class MythicCommands {
     }
 
     private static int exportAllArmor(CommandContext<CommandSourceStack> context) {
-        var folder = Path.of(FabricLoader.getInstance().getConfigDir() + "/mythicmetals");
+        var folder = Path.of(net.neoforged.fml.loading.FMLPaths.CONFIGDIR.get() + "/mythicmetals");
         try {
             Files.createDirectory(folder);
         } catch (FileAlreadyExistsException ignored) {
@@ -194,7 +206,7 @@ public final class MythicCommands {
             MythicMetals.LOGGER.error("Failed to create folder", e);
         }
         MythicArmor.ARMOR_MAP.forEach((name, armorSet) -> {
-            var file = Path.of(FabricLoader.getInstance().getConfigDir() + "/mythicmetals/" + name.toLowerCase(Locale.ROOT) + ".md");
+            var file = Path.of(net.neoforged.fml.loading.FMLPaths.CONFIGDIR.get() + "/mythicmetals/" + name.toLowerCase(Locale.ROOT) + ".md");
             try {
                 Files.createFile(file);
             } catch (FileAlreadyExistsException ignored) {
@@ -222,7 +234,7 @@ public final class MythicCommands {
     // TODO - Definitely the most lazy approach.
     //  At least make it overwrite the files instead of forcing you to delete the folder every time
     private static int exportAllTools(CommandContext<CommandSourceStack> context) {
-        var folder = Path.of(FabricLoader.getInstance().getConfigDir() + "/mythicmetals");
+        var folder = Path.of(net.neoforged.fml.loading.FMLPaths.CONFIGDIR.get() + "/mythicmetals");
         try {
             Files.createDirectory(folder);
         } catch (FileAlreadyExistsException ignored) {
@@ -231,7 +243,7 @@ public final class MythicCommands {
             MythicMetals.LOGGER.error("Failed to create folder", e);
         }
         ReflectionUtils.iterateAccessibleStaticFields(MythicTools.class, ToolSet.class, (value, name, field) -> {
-            var file = Path.of(FabricLoader.getInstance().getConfigDir() + "/mythicmetals/" + name.toLowerCase(Locale.ROOT) + "-tools.md");
+            var file = Path.of(net.neoforged.fml.loading.FMLPaths.CONFIGDIR.get() + "/mythicmetals/" + name.toLowerCase(Locale.ROOT) + "-tools.md");
             try {
                 Files.createFile(file);
             } catch (FileAlreadyExistsException ignored) {
