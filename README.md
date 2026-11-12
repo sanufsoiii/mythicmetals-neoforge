@@ -4,7 +4,7 @@ Unofficial port of **[Mythic Metals](https://github.com/Noaaan/MythicMetals)** b
 
 ## Status: early alpha
 
-The port builds and the client starts to the main menu without errors. **Gameplay has not been tested in a world yet**: expect bugs, and please report them (see below). Dedicated server has not been tested either.
+The port loads without errors and was briefly tested in game with no bugs found so far. It is still a first release: please report anything that behaves differently from the original (see below). Dedicated server has not been tested yet.
 
 ## Download
 
